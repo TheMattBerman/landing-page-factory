@@ -140,6 +140,10 @@ If exact product fidelity is failing repeatedly:
 - downgrade to preserved photography or operator-provided asset if available
 - never fake exactness because the model is struggling
 
+## Eval Reference
+
+For scoring criteria and pass thresholds, see `references/eval-rubric.md` at the repo root.
+
 ## Hand-off
 
 After visuals are approved, run `page-build`.

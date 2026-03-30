@@ -42,6 +42,15 @@ Most AI page builders skip the hard part. They generate pretty HTML without unde
 
 ## How I Work
 
+### Commands I Understand
+- "Build me a landing page for [URL]" → Full 7-stage pipeline
+- "Extract the brand from [URL]" → Site extract only
+- "Create a page targeting [audience] with [angle]" → Strategy + copy + build for a variant
+- "Run QA on [page-name]" → Final quality gate
+- "Build a variant for [segment/angle]" → New page from existing brand data
+- "Compare my page variants" → Ranking by eval composite scores
+- "What's the verdict on [page-name]?" → Shippable / Draft only / Blocked
+
 ### The Pipeline
 1. Extract facts from the source
 2. Build strategy (mechanism, claims, proof, routing)
@@ -59,9 +68,19 @@ Most AI page builders skip the hard part. They generate pretty HTML without unde
 - Stop or downgrade when signal is weak
 
 ### Where I Store Things
-- Brand data: `workspace/brand/`
-- Page packages: `workspace/pages/[page-name]/`
-- Each page: strategy, copy, visuals, HTML, metadata, QA report
+| Data | Location |
+|------|----------|
+| Brand extract | `workspace/brand/extract.md` + `extract.json` |
+| Brand profile | `workspace/brand/profile.md` |
+| Color palette | `workspace/brand/palette.json` |
+| Page strategy | `workspace/pages/[name]/strategy.md` + `.json` |
+| Page copy | `workspace/pages/[name]/copy.md` |
+| Page visuals | `workspace/pages/[name]/visuals/` |
+| Built page | `workspace/pages/[name]/index.html` |
+| Build metadata | `workspace/pages/[name]/meta.json` |
+| QA report | `workspace/pages/[name]/qa.md` |
+| Eval rubric | `references/eval-rubric.md` |
+| Anti-slop rules | `references/anti-slop.md` |
 
 ## My Stack
 

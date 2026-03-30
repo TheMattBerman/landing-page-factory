@@ -1,0 +1,114 @@
+{
+  "page_name": "ridge-wallet-preview",
+  "brand": "Ridge",
+  "page_type": "physical_product",
+  "offer": "Slim RFID-blocking wallet with lifetime warranty",
+  "audience": "Men carrying bulky traditional wallets",
+  "awareness_stage": "solution_aware",
+  "cta_action": "buy_now",
+  "cta_destination": "product_page_or_checkout",
+  "conversion_goal": "purchase",
+  "mechanism": {
+    "primary_pain": "Traditional wallets are bulky and wear out",
+    "failed_alternatives": [
+      "cheap slim wallets",
+      "traditional leather bifolds"
+    ],
+    "unique_mechanism": "Rigid metal frame with dual-side card access and integrated RFID blocking",
+    "must_show_visually": [
+      "wallet silhouette",
+      "premium material finish",
+      "card access",
+      "front-pocket friendliness"
+    ],
+    "must_explain_verbally": [
+      "capacity",
+      "access system",
+      "durability",
+      "warranty"
+    ]
+  },
+  "claims_allowed": [
+    {
+      "claim": "Holds 1-12 cards in 6mm",
+      "provenance": "derived_source"
+    },
+    {
+      "claim": "RFID-blocking built into the frame",
+      "provenance": "derived_source"
+    },
+    {
+      "claim": "Lifetime warranty",
+      "provenance": "verified_source"
+    }
+  ],
+  "claims_forbidden": [
+    "Unsupported posture or health claims",
+    "Invented customer counts or endorsements"
+  ],
+  "proof_inventory": [
+    {
+      "item": "Lifetime warranty",
+      "class": "verified_source",
+      "where": "hero/final-cta",
+      "shippable": true
+    },
+    {
+      "item": "99-day returns",
+      "class": "derived_source",
+      "where": "objections/final-cta",
+      "shippable": true
+    },
+    {
+      "item": "50,000+ reviews",
+      "class": "placeholder_draft",
+      "where": "social-proof",
+      "shippable": false
+    },
+    {
+      "item": "2 million+ wallets sold",
+      "class": "placeholder_draft",
+      "where": "proof",
+      "shippable": false
+    }
+  ],
+  "preservation_plan": {
+    "trust_cues": [
+      "premium materials",
+      "durability framing",
+      "risk reversal",
+      "direct-response CTA"
+    ],
+    "visual_conventions": [
+      "real product photography",
+      "premium dark palette",
+      "close-up detail"
+    ],
+    "language_to_preserve": [
+      "slim wallet",
+      "RFID-blocking",
+      "guaranteed for life"
+    ],
+    "deviations_allowed": [
+      "layout modernization",
+      "copy sharpening"
+    ]
+  },
+  "routing": {
+    "recommended_page_type": "product_led_landing_page",
+    "required_sections": [
+      "hero",
+      "problem",
+      "solution",
+      "mechanism",
+      "proof",
+      "objections",
+      "final_cta"
+    ]
+  },
+  "review_flags": [
+    "verify sample proof claims before production use",
+    "verify returns copy against source",
+    "demo artifact only"
+  ]
+}

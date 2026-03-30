@@ -22,7 +22,7 @@ This stage assembles the page while preserving what matters for trust and conver
 3. `workspace/brand/palette.json`
 4. `workspace/pages/[page-name]/copy.md`
 5. `workspace/pages/[page-name]/visuals/`
-6. `references/anti-slop.md`
+6. `references/anti-slop.md` (repo root: `../../references/anti-slop.md`)
 
 If strategy is missing, stop.
 
@@ -134,6 +134,11 @@ Write this into `workspace/pages/[page-name]/qa.md` and summarize in `meta.json`
 - images_used
 - sections_present
 - build_confidence
+
+## Eval Reference
+
+For scoring criteria and pass thresholds, see `references/eval-rubric.md` at the repo root.
+For anti-slop patterns, see `references/anti-slop.md` at the repo root.
 
 ## Stop / continue logic
 

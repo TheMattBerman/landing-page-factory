@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ridge Wallet 2.0 | Slim, RFID-Blocking, Guaranteed for Life</title>
+  <meta name="description" content="The Ridge Wallet 2.0 holds 1-12 cards in 6mm. Titanium or aluminum frame. RFID-blocking built in. Lifetime warranty. Free shipping and 99-day returns.">
+  <meta property="og:title" content="The wallet you'll carry for the rest of your life">
+  <meta property="og:description" content="Ridge Wallet 2.0 — lighter, smarter, still guaranteed for life. Starting at $75.">
+  
+  <!-- Fonts: Satoshi + DM Sans (anti-slop: no Inter, no Arial) -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #0a0a0a;
+      --white: #FFFFFF;
+      --bg: #F7F6F3;
+      --surface: #FFFFFF;
+      --border: rgba(10,10,10,0.06);
+      --text: #2F3437;
+      --text-muted: #787774;
+      --accent: #E8430A;
+      --accent-hover: #D03A08;
+      --accent-subtle: rgba(232,67,10,0.06);
+      --font-display: 'Satoshi', system-ui, sans-serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --radius-sm: 2px;
+      --radius-md: 12px;
+      --radius-lg: 24px;
+      --max-w: 1200px;
+      --ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* === NOISE OVERLAY (taste-skill: physical texture) === */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* === FLOATING PILL NAV (taste-skill: fluid island) === */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(10, 10, 10, 0.06);
+      border-radius: 100px;
+      padding: 8px 8px 8px 28px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      box-shadow: 0 4px 24px rgba(10,10,10,0.04), 0 1px 2px rgba(10,10,10,0.02);
+      transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+    }
+    .nav:hover {
+      box-shadow: 0 8px 32px rgba(10,10,10,0.06), 0 1px 2px rgba(10,10,10,0.03);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9375rem;
+      letter-spacing: 0.14em;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-link {
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s var(--ease-out);
+    }
+    .nav-link:hover { color: var(--primary); }
+    .nav-cta {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 0.8125rem;
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 24px;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(10,10,10,0.15);
+    }
+    .nav-cta:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* === HERO — Split, asymmetric, cinematic === */
+    .hero {
+      background: var(--primary);
+      color: var(--white);
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(232,67,10,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      padding: 120px 48px 120px 80px;
+      max-width: 580px;
+      margin-left: auto;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      padding: 6px 16px;
+      margin-bottom: 32px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 5vw, 3.75rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.55);
+      max-width: 44ch;
+      margin-bottom: 44px;
+    }
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 0.9375rem;
+      background: var(--accent);
+      color: var(--white);
+      padding: 16px 20px 16px 32px;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(232, 67, 10, 0.3);
+    }
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+    /* taste-skill: button-in-button trailing icon */
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.4s var(--ease-out), background 0.3s ease;
+      font-size: 1rem;
+    }
+    .btn-primary:hover .btn-icon {
+      transform: translateX(2px) translateY(-1px);
+      background: rgba(255,255,255,0.25);
+    }
+    .hero-meta {
+      margin-top: 20px;
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.3);
+    }
+    .hero-image {
+      height: 100%;
+      min-height: 100dvh;
+      position: relative;
+    }
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--primary) 0%, transparent 30%);
+    }
+
+    /* === SECTIONS === */
+    .section { padding: 120px 24px; }
+    .section-lg { padding: 140px 24px; }
+    .section-surface { background: var(--surface); }
+    .section-dark { background: var(--primary); color: var(--white); }
+    .section-inner { max-width: var(--max-w); margin: 0 auto; }
+    
+    /* taste-skill: eyebrow tags */
+    .eyebrow {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      border-radius: 100px;
+      padding: 5px 14px;
+      margin-bottom: 20px;
+    }
+    .section-dark .eyebrow {
+      background: rgba(232,67,10,0.12);
+    }
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .section-text {
+      font-size: 1.0625rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 60ch;
+    }
+    .section-dark .section-text { color: rgba(255,255,255,0.5); }
+
+    /* === PROBLEM — Editorial split === */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .problem-text p + p { margin-top: 20px; }
+    .problem-punchline {
+      color: var(--primary) !important;
+      font-weight: 500;
+      font-size: 1.125rem;
+    }
+    .problem-image {
+      position: relative;
+    }
+    /* taste-skill: double-bezel nested container */
+    .double-bezel {
+      background: rgba(10,10,10,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 6px;
+    }
+    .double-bezel-inner {
+      border-radius: calc(var(--radius-lg) - 6px);
+      overflow: hidden;
+    }
+    .double-bezel-inner img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    /* === FEATURES — Asymmetric bento (taste-skill) === */
+    .feature-bento {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 20px;
+      margin-top: 56px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+    }
+    .feature-card:hover {
+      box-shadow: 0 8px 40px rgba(10,10,10,0.04);
+      transform: translateY(-2px);
+    }
+    .feature-card.tall {
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .feature-num {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    .feature-card p {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 48ch;
+    }
+    .feature-card-visual {
+      margin-top: 32px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .feature-card-visual img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+    }
+    .feature-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: var(--accent-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .feature-card-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* === STEPS === */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 56px;
+      background: var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .step-card {
+      background: var(--surface);
+      padding: 48px 40px;
+    }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: rgba(10,10,10,0.06);
+      margin-bottom: 20px;
+    }
+    .step-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    .step-card p {
+      font-size: 0.9375rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+    }
+
+    /* === TESTIMONIALS — Asymmetric layout === */
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+      margin-top: 56px;
+    }
+    .testimonial-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+    }
+    .testimonial-card.featured {
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--white);
+      border-color: transparent;
+    }
+    .testimonial-card blockquote {
+      font-size: 1.125rem;
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+    .testimonial-card.featured blockquote {
+      font-size: 1.375rem;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.85);
+    }
+    .testimonial-card cite {
+      font-style: normal;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .testimonial-card.featured cite {
+      color: rgba(255,255,255,0.4);
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* === FAQ === */
+    .faq-list {
+      max-width: 680px;
+      margin-top: 56px;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 28px 0;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: color 0.3s var(--ease-out);
+    }
+    .faq-question:hover { color: var(--accent); }
+    .faq-toggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      transition: transform 0.4s var(--ease-out), background 0.3s ease;
+      flex-shrink: 0;
+    }
+    .faq-item.open .faq-toggle {
+      transform: rotate(45deg);
+      background: var(--accent-subtle);
+      color: var(--accent);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s var(--ease-out), padding 0.4s var(--ease-out);
+    }
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      padding-bottom: 28px;
+    }
+    .faq-answer p {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 55ch;
+    }
+
+    /* === FINAL CTA === */
+    .final-cta {
+      text-align: center;
+      padding: 160px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute;
+      bottom: -200px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(232,67,10,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .final-cta .section-heading {
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--white);
+    }
+    .final-cta .section-text {
+      margin: 0 auto 48px;
+      text-align: center;
+    }
+    .final-guarantee {
+      margin-top: 24px;
+      font-size: 0.8125rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.02em;
+    }
+
+    /* === FOOTER === */
+    .footer {
+      background: var(--primary);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.3);
+      padding: 32px 24px;
+      font-size: 0.75rem;
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .footer a:hover {
+      color: rgba(255,255,255,0.7);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    /* === SCROLL REVEAL (taste-skill: entry animation) === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .nav { top: 12px; padding: 6px 6px 6px 20px; gap: 16px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-content { padding: 120px 24px 60px; max-width: none; margin: 0; }
+      .hero h1 { font-size: 2.25rem; }
+      .hero-image { min-height: 50vw; max-height: 400px; }
+      .hero-image::after { background: linear-gradient(180deg, var(--primary) 0%, transparent 40%); }
+      .problem-grid { grid-template-columns: 1fr; gap: 40px; }
+      .problem-image { order: -1; }
+      .feature-bento { grid-template-columns: 1fr; }
+      .feature-card.tall { grid-row: auto; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .testimonial-grid { grid-template-columns: 1fr; }
+      .testimonial-card.featured { grid-row: auto; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .section { padding: 80px 24px; }
+      .section-lg { padding: 80px 24px; }
+      .final-cta { padding: 100px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FLOATING PILL NAV -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">RIDGE</a>
+    <div class="nav-links">
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#proof" class="nav-link">Reviews</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+    </div>
+    <a href="#cta" class="nav-cta">Get Yours</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        50,000+ five-star reviews
+      </div>
+      <h1>Your pocket shouldn't be the thickest thing <em>about you</em></h1>
+      <p class="hero-sub">The Ridge Wallet 2.0. Lighter frame. Smarter access. Same lifetime warranty that's backed every Ridge since 2013.</p>
+      <div class="hero-cta-group">
+        <a href="#cta" class="btn-primary">
+          Get Yours — Free Shipping
+          <span class="btn-icon">&#8599;</span>
+        </a>
+      </div>
+      <p class="hero-meta">Free returns within 99 days. Guaranteed for life.</p>
+    </div>
+    <div class="hero-image">
+      <img src="visuals/hero-1.jpg" alt="Ridge Wallet 2.0 in titanium, showing slim 6mm profile" loading="eager">
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section-lg section-surface">
+    <div class="section-inner reveal">
+      <div class="problem-grid">
+        <div class="problem-text">
+          <span class="eyebrow">The problem</span>
+          <h2 class="section-heading">You already know your wallet is a problem.</h2>
+          <p class="section-text">
+            It's three inches thick, stuffed with receipts you'll never look at, and it's slowly destroying your back pocket along with your back.
+          </p>
+          <p class="section-text">
+            You've tried the "slim wallets." The cheap ones from Amazon that fall apart in six months. The ones where your cards get stuck. The ones that look good in the ad and feel like a toy in your hand.
+          </p>
+          <p class="section-text problem-punchline">
+            The issue isn't finding a slim wallet. There are hundreds. The issue is finding one that actually lasts.
+          </p>
+        </div>
+        <div class="problem-image">
+          <div class="double-bezel">
+            <div class="double-bezel-inner">
+              <img src="visuals/lifestyle-1.jpg" alt="Man pulling slim Ridge wallet from front jeans pocket" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES — Bento grid -->
+  <section class="section" id="features">
+    <div class="section-inner reveal">
+      <span class="eyebrow">The solution</span>
+      <h2 class="section-heading">Rebuilt from scratch.</h2>
+      
+      <div class="feature-bento">
+        <!-- Tall card with image -->
+        <div class="feature-card tall">
+          <div>
+            <span class="feature-num">01</span>
+            <h3>Holds 1-12 cards in 6mm</h3>
+            <p>Not by squeezing them in. The 2.0 frame flexes when you need access and locks when you don't. Dual-access system — cards fan from either side.</p>
+          </div>
+          <div class="feature-card-visual">
+            <img src="visuals/product-1.jpg" alt="Ridge wallet with cards fanning out" loading="lazy">
+          </div>
+        </div>
+        
+        <!-- Stacked smaller cards -->
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Titanium or aluminum</h3>
+          <p>The titanium frame weighs less than two credit cards. Both are built to take a beating you'll never give them.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3>RFID-blocking built in</h3>
+          <p>Not a sleeve. Not a sticker. It's the frame itself. Your cards are shielded the moment they go in.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section-surface">
+    <div class="section-inner reveal">
+      <span class="eyebrow">How it works</span>
+      <h2 class="section-heading">Three steps. Then forget about it.</h2>
+      
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <h3>Pick your material</h3>
+          <p>Titanium, aluminum, or carbon fiber. Each one looks different, feels different. All of them last forever.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <h3>Load your cards</h3>
+          <p>Slide them in. The elastic band or money clip holds cash on the outside. Everything you carry, nothing you don't.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <h3>Forget about it</h3>
+          <p>Front pocket. Back pocket. At 6mm thick, you won't notice it's there until you need it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="section" id="proof">
+    <div class="section-inner reveal">
+      <span class="eyebrow">Don't take our word for it</span>
+      <h2 class="section-heading">50,000+ people already switched.</h2>
+      
+      <div class="testimonial-grid">
+        <div class="testimonial-card featured">
+          <blockquote>"I've had mine for 4 years. Looks exactly like the day I bought it. Dropped it on concrete, sat on it every day, taken it through airport security more times than I can count. It doesn't care."</blockquote>
+          <cite>Marcus R. — verified buyer, 4 years</cite>
+        </div>
+        <div class="testimonial-card">
+          <blockquote>"Switched from a leather bifold. Can't believe I carried that brick for 15 years."</blockquote>
+          <cite>David K. — verified buyer</cite>
+        </div>
+        <div class="testimonial-card">
+          <blockquote>"My wife got me one for Christmas. I bought three more for my dad, brother, and best friend."</blockquote>
+          <cite>James T. — verified buyer</cite>
+        </div>
+      </div>
+      
+      <div class="stats-row">
+        <div class="stat-card">
+          <p class="stat-number">50,000+</p>
+          <p class="stat-label">Five-star reviews</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-number">13</p>
+          <p class="stat-label">Years in business</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-number">2M+</p>
+          <p class="stat-label">Wallets sold</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-number">Lifetime</p>
+          <p class="stat-label">Warranty on every one</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-surface" id="faq">
+    <div class="section-inner reveal">
+      <span class="eyebrow">Common questions</span>
+      <h2 class="section-heading">Still thinking about it?</h2>
+      
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            Is it hard to get cards out?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>The 2.0 has a new dual-access system. Fan your cards from either side with one thumb. Faster than a regular wallet once you get used to it — about a day.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            What if I don't like it?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>99-day trial. Free returns. Full refund. We've been doing this for 13 years — we don't need to trap you into keeping it.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            Does it hold cash?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. The money clip or elastic strap holds folded bills on the outside. Most people carry 1-5 bills comfortably.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            Is it worth the price over cheaper slim wallets?
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>The cheap ones replace themselves every year. At $75, the Ridge replaces itself never. Lifetime warranty means we fix or replace it if anything goes wrong. Ever.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section-dark final-cta" id="cta">
+    <div class="section-inner">
+      <span class="eyebrow">Ready?</span>
+      <h2 class="section-heading">Thirteen years. Two million wallets.<br>One guarantee.</h2>
+      <p class="section-text" style="color: rgba(255,255,255,0.5); margin: 0 auto 48px; text-align: center;">If anything goes wrong, we make it right. For life.<br>The Ridge Wallet 2.0 starts at $75.</p>
+      <a href="#" class="btn-primary" style="font-size: 1rem; padding: 18px 24px 18px 36px;">
+        Get Yours — Free Shipping
+        <span class="btn-icon">&#8599;</span>
+      </a>
+      <p class="final-guarantee">Free shipping &middot; 99-day returns &middot; Lifetime warranty</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Ridge. All rights reserved.</span>
+      <span>Built with <a href="https://bigplayers.co">Page Factory</a> by <a href="https://bigplayers.co">Big Players</a></span>
+    </div>
+  </footer>
+
+  <!-- SCROLL REVEAL -->
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

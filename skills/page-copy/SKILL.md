@@ -194,6 +194,10 @@ Continue with downgrade if:
 - proof is limited but soft claims still work
 - brand voice confidence is medium or low
 
+## Eval Reference
+
+For scoring criteria and pass thresholds, see `references/eval-rubric.md` at the repo root.
+
 ## Hand-off
 
 After copy, run `page-visuals` and `page-build`.

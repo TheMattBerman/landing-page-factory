@@ -1,0 +1,52 @@
+{
+  "brand": "Ridge",
+  "page": "Ridge Wallet 2.0 Landing Page",
+  "page_name": "ridge-wallet-preview",
+  "page_type": "physical_product",
+  "template_route": "product-led-classic",
+  "generated": "2026-03-30",
+  "headline": "Your pocket shouldn't be the thickest thing about you",
+  "seo_title": "Ridge Wallet 2.0 | Slim, RFID-Blocking, Guaranteed for Life",
+  "meta_description": "The Ridge Wallet 2.0 holds 1-12 cards in 6mm. Titanium or aluminum frame. RFID-blocking built in. Lifetime warranty. Free shipping and 99-day returns.",
+  "cta_action": "buy_now",
+  "cta_destination": "product_page_or_checkout",
+  "colors": {
+    "primary": "#0a0a0a",
+    "accent": "#E8430A"
+  },
+  "fonts": {
+    "headline": "Satoshi",
+    "body": "DM Sans"
+  },
+  "images_used": [
+    "hero-1.jpg",
+    "lifestyle-1.jpg",
+    "product-1.jpg"
+  ],
+  "sections_present": [
+    "hero",
+    "problem",
+    "solution",
+    "how-it-works",
+    "proof",
+    "objections",
+    "final-cta"
+  ],
+  "proof_summary": {
+    "verified_source": [
+      "Lifetime warranty"
+    ],
+    "derived_source": [
+      "Card capacity",
+      "RFID-blocking"
+    ],
+    "placeholder_draft": [
+      "50,000+ reviews",
+      "2 million+ wallets sold"
+    ]
+  },
+  "review_flags": [
+    "Demo sample; validate quantitative proof before production use"
+  ],
+  "build_confidence": "demo"
+}
