@@ -113,13 +113,29 @@ cat > "$OUTPUT_DIR/palette.json" << EOF
 }
 EOF
 
-# Download logo if URL found
+# Download logo if URL found from branding format
 if [[ -n "$LOGO" && "$LOGO" != "null" ]]; then
   echo "  → Downloading logo..."
   LOGO_EXT="${LOGO##*.}"
-  # Default to png if extension is unclear
   [[ "$LOGO_EXT" =~ ^(png|jpg|jpeg|svg|webp|ico)$ ]] || LOGO_EXT="png"
   curl -sL "$LOGO" -o "$OUTPUT_DIR/logo.$LOGO_EXT" --max-time 10 2>/dev/null || echo "  ⚠ Logo download failed"
+else
+  # Fallback: try to find logo in markdown content or metadata
+  MARKDOWN_FILE="$OUTPUT_DIR/extract-markdown.md"
+  if [[ -f "$MARKDOWN_FILE" ]]; then
+    LOGO_FALLBACK=$(grep -oP 'https?://[^\s\)\"]+logo[^\s\)\"]*\.(png|jpg|jpeg|svg|webp)' "$MARKDOWN_FILE" | head -1)
+    if [[ -n "$LOGO_FALLBACK" ]]; then
+      echo "  → Logo not in branding data, found in page content: $LOGO_FALLBACK"
+      LOGO="$LOGO_FALLBACK"
+      LOGO_EXT="${LOGO##*.}"
+      curl -sL "$LOGO" -o "$OUTPUT_DIR/logo.$LOGO_EXT" --max-time 10 2>/dev/null || echo "  ⚠ Logo download failed"
+      # Update palette.json with found logo
+      TMP_PALETTE=$(mktemp)
+      jq --arg logo "$LOGO" '.logo = $logo' "$OUTPUT_DIR/palette.json" > "$TMP_PALETTE" && mv "$TMP_PALETTE" "$OUTPUT_DIR/palette.json"
+    else
+      echo "  ⚠ No logo found in branding data or page content"
+    fi
+  fi
 fi
 
 echo ""
