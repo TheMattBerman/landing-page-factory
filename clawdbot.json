@@ -1,0 +1,29 @@
+{
+  "name": "landing-page-factory",
+  "displayName": "Landing Page Factory",
+  "description": "AI landing page builder — extract, strategize, profile, write, build, QA. URL to deployable page with zero AI slop.",
+  "version": "1.0.0",
+  "author": "@themattberman",
+  "skills": [
+    "site-extract",
+    "page-strategy",
+    "brand-profile",
+    "page-copy",
+    "page-visuals",
+    "page-build",
+    "page-qa"
+  ],
+  "requiredEnv": [],
+  "optionalEnv": [
+    "FIRECRAWL_API_KEY"
+  ],
+  "tags": [
+    "landing-pages",
+    "conversion",
+    "copywriting",
+    "brand-extraction",
+    "marketing",
+    "web-design",
+    "anti-slop"
+  ]
+}

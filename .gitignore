@@ -1,0 +1,23 @@
+# Environment
+.env
+
+# Workspace output (generated pages, not tracked)
+workspace/brand/extract.md
+workspace/brand/extract.json
+workspace/brand/extract-markdown.md
+workspace/brand/extract-metadata.json
+workspace/brand/firecrawl-raw.json
+workspace/brand/profile.md
+workspace/brand/palette.json
+workspace/pages/
+
+# Memory
+memory/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
