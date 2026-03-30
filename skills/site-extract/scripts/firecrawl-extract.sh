@@ -76,15 +76,57 @@ fi
 # Save raw response
 echo "$RESPONSE" | jq '.' > "$OUTPUT_DIR/firecrawl-raw.json" 2>/dev/null || echo "$RESPONSE" > "$OUTPUT_DIR/firecrawl-raw.json"
 
-# Extract branding data (the main brand identity payload)
+# Extract branding and metadata
 BRANDING=$(echo "$RESPONSE" | jq '.data.branding // {}' 2>/dev/null)
-echo "$BRANDING" | jq '.' > "$OUTPUT_DIR/extract.json" 2>/dev/null
+METADATA=$(echo "$RESPONSE" | jq '.data.metadata // {}' 2>/dev/null)
+echo "$BRANDING" | jq '.' > "$OUTPUT_DIR/branding.json" 2>/dev/null
+
+echo "$METADATA" | jq '.' > "$OUTPUT_DIR/extract-metadata.json" 2>/dev/null
 
 # Extract markdown content for claim/proof analysis
-echo "$RESPONSE" | jq -r '.data.markdown // empty' > "$OUTPUT_DIR/extract-markdown.md" 2>/dev/null
+MARKDOWN=$(echo "$RESPONSE" | jq -r '.data.markdown // empty' 2>/dev/null)
+printf '%s
+' "$MARKDOWN" > "$OUTPUT_DIR/extract-markdown.md"
+printf '%s
+' "$MARKDOWN" > "$OUTPUT_DIR/extract.md"
 
-# Extract metadata
-echo "$RESPONSE" | jq '.data.metadata // {}' > "$OUTPUT_DIR/extract-metadata.json" 2>/dev/null
+# Brand name fallback order: branding.brand_name -> branding.images.logoAlt -> metadata title fields -> hostname
+HOSTNAME=$(printf '%s' "$URL" | sed -E 's|https?://||; s|/.*$||; s|^www\.||')
+TITLE=$(echo "$METADATA" | jq -r '.title // .ogTitle // .["og:title"] // empty' 2>/dev/null)
+LOGO_ALT=$(echo "$BRANDING" | jq -r '.images.logoAlt // empty' 2>/dev/null)
+BRAND_NAME=$(echo "$BRANDING" | jq -r '.brand_name // .brand // empty' 2>/dev/null)
+if [[ -z "$BRAND_NAME" || "$BRAND_NAME" == "null" ]]; then BRAND_NAME="$LOGO_ALT"; fi
+if [[ -z "$BRAND_NAME" || "$BRAND_NAME" == "null" ]]; then BRAND_NAME="$TITLE"; fi
+if [[ -n "$BRAND_NAME" && "$BRAND_NAME" != "null" ]]; then
+  BRAND_NAME=$(printf '%s' "$BRAND_NAME" | sed -E 's/[[:space:]]+[—–|-].*$//' | sed -E 's/[[:space:]]*\|.*$//' | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')
+fi
+if [[ -z "$BRAND_NAME" || "$BRAND_NAME" == "null" ]]; then
+  BRAND_NAME=$(printf '%s' "$HOSTNAME" | awk -F'.' '{print $1}')
+fi
+
+# Build canonical extract.json matching downstream expectations
+jq -n   --arg brand "$BRAND_NAME"   --arg source "$URL"   --arg hostname "$HOSTNAME"   --arg title "$TITLE"   --arg description "$(echo "$METADATA" | jq -r '.description // .ogDescription // .["og:description"] // empty' 2>/dev/null)"   --arg logo "$(echo "$BRANDING" | jq -r '.logo // .images.logo // empty' 2>/dev/null)"   --arg screenshot "$(echo "$RESPONSE" | jq -r '.data.screenshot // empty' 2>/dev/null)"   --arg confidence "medium"   --argjson branding "$BRANDING"   --argjson metadata "$METADATA"   '{
+    brand: $brand,
+    category: ($metadata.description // ""),
+    offer: ($metadata.description // ""),
+    source: $source,
+    hostname: $hostname,
+    hero_language: {headline: $title, subheadline: ($metadata.description // "")},
+    claims: [],
+    proof_inventory: [],
+    cta_inventory: [],
+    mechanism_language: [],
+    trust_cues: [],
+    page_patterns: [],
+    visual_motifs: [],
+    audience_signals: [],
+    missing_flags: [],
+    logo_url: $logo,
+    screenshot_url: $screenshot,
+    branding: $branding,
+    metadata: $metadata,
+    confidence: $confidence
+  }' > "$OUTPUT_DIR/extract.json"
 
 # Extract screenshot URL if available
 SCREENSHOT_URL=$(echo "$RESPONSE" | jq -r '.data.screenshot // empty' 2>/dev/null)
@@ -146,6 +188,7 @@ ls -1 "$OUTPUT_DIR"/ 2>/dev/null | sed 's/^/     /'
 echo ""
 
 # Show key brand data
+echo "   Brand: $BRAND_NAME"
 echo "   Brand identity:"
 echo "     Color scheme: $COLOR_SCHEME"
 echo "     Logo: ${LOGO:-not found}"
