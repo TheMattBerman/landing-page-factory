@@ -1,0 +1,98 @@
+{
+  "brand": "StealAds",
+  "page": "stealads-preview",
+  "page_type": "saas_app",
+  "mechanism_type": "psychological ad deconstruction plus creative generation",
+  "template_route": "screenshot_led_saas",
+  "CTA_destination": "https://stealads.ai",
+  "proof_items": {
+    "summary": {
+      "verified_source": 4,
+      "derived_source": 0,
+      "placeholder_draft": 1,
+      "missing": 0
+    },
+    "items": [
+      {
+        "type": "testimonial",
+        "text": "I've tried this... they're actually really good.",
+        "attribution": "Christian Wiens, Founder",
+        "provenance": "verified_source"
+      },
+      {
+        "type": "testimonial",
+        "text": "It's better than anything I've seen.",
+        "attribution": "Chris L., GM @ Fitness Brand",
+        "provenance": "verified_source"
+      },
+      {
+        "type": "testimonial",
+        "text": "This is going to be a hugely popular tool.",
+        "attribution": "Tom, Early Access User",
+        "provenance": "verified_source"
+      },
+      {
+        "type": "pricing",
+        "text": "Growth $149/mo · Scale $299/mo · Agency $599/mo · Managed $3000/mo",
+        "provenance": "verified_source"
+      },
+      {
+        "type": "product_visual",
+        "text": "Concept UI mockups",
+        "provenance": "placeholder_draft"
+      }
+    ]
+  },
+  "risk_reversal_present": false,
+  "compliance_flags": [],
+  "review_flags": [
+    "CTA destination exact signup flow unconfirmed",
+    "UI visuals are concept-support mockups, not verified product screenshots",
+    "Early Access status should be confirmed before ship"
+  ],
+  "preserved_elements": [
+    "Steal the psychology language",
+    "Your competitors' ads are winning headline",
+    "Orange accent #FF5733",
+    "Dark SaaS trust cue",
+    "Pricing ladder",
+    "Named testimonials"
+  ],
+  "deviations_from_source": [
+    "Replaced pure black #000000 with off-black #0a0a0a",
+    "Replaced Montserrat/Open Sans with Satoshi/DM Sans",
+    "Warm bone background used instead of flat #F4F4F4",
+    "Asymmetric bento layout added per anti-slop guidance"
+  ],
+  "images_used": [
+    {
+      "role": "hero",
+      "path": "/tmp/landing-page-factory/examples/stealads-preview/visuals/hero.jpg",
+      "class": "concept_support"
+    },
+    {
+      "role": "lifestyle",
+      "path": "/tmp/landing-page-factory/examples/stealads-preview/visuals/lifestyle.jpg",
+      "class": "branded_environment"
+    },
+    {
+      "role": "ui_mockup",
+      "path": "/tmp/landing-page-factory/examples/stealads-preview/visuals/ui-mockup.jpg",
+      "class": "concept_support"
+    }
+  ],
+  "sections_present": [
+    "floating_nav",
+    "hero",
+    "proof",
+    "problem",
+    "mechanism",
+    "features_bento",
+    "lifestyle_context",
+    "pricing",
+    "objections",
+    "cta_close",
+    "footer"
+  ],
+  "build_confidence": "medium-high draft"
+}

@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StealAds — Stop Copying Ads. Start Stealing the Psychology.</title>
+  <meta name="description" content="StealAds decodes the psychology behind high-performing competitor ads, then generates ready-to-run creative for your brand." />
+  <meta property="og:title" content="Stop copying ads. Start stealing the psychology." />
+  <meta property="og:description" content="Analyze competitor ads for the psychology behind performance, then generate creative your team can ship faster." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="visuals/hero.jpg" />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&f[]=dm-sans@400,500,700&display=swap" />
+  <style>
+    :root {
+      --bg: #f5f0e8;
+      --bg-alt: #ece4d8;
+      --surface: #fffaf3;
+      --surface-2: rgba(255,255,255,.62);
+      --ink: #0a0a0a;
+      --ink-soft: #1a1a1a;
+      --muted: #5f5a52;
+      --line: #d8cec1;
+      --accent: #ff5733;
+      --accent-deep: #d94828;
+      --dark: #111111;
+      --dark-soft: #171717;
+      --shadow: 0 14px 40px rgba(102, 68, 35, 0.09);
+      --shadow-tight: 0 8px 20px rgba(102, 68, 35, 0.08);
+      --radius-s: 12px;
+      --radius-m: 18px;
+      --radius-l: 28px;
+      --pill: 999px;
+      --spring: cubic-bezier(0.32,0.72,0,1);
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: var(--ink-soft);
+      background:
+        radial-gradient(circle at top left, rgba(255,87,51,.08), transparent 26%),
+        radial-gradient(circle at top right, rgba(0,0,0,.04), transparent 30%),
+        var(--bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button, .button {
+      font: inherit;
+      border: 0;
+      cursor: pointer;
+      transition: transform .35s var(--spring), box-shadow .35s var(--spring), background .25s ease, color .25s ease, border-color .25s ease;
+    }
+    .container { width: min(calc(100% - 32px), var(--max)); margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: var(--pill);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.08);
+      color: #f2eadd;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .eyebrow.light {
+      background: rgba(255,255,255,.65);
+      color: var(--ink);
+      border-color: var(--line);
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(255,87,51,.15);
+    }
+
+    .floating-nav-wrap {
+      position: sticky;
+      top: 18px;
+      z-index: 50;
+      padding-top: 18px;
+    }
+    .floating-nav {
+      width: min(calc(100% - 24px), 980px);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 12px;
+      border-radius: var(--pill);
+      background: rgba(255, 250, 243, 0.78);
+      border: 1px solid rgba(10,10,10,.08);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-tight);
+    }
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: var(--ink);
+      color: var(--bg);
+      display: grid;
+      place-items: center;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .brand-lockup strong {
+      display: block;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: 15px;
+    }
+    .brand-lockup span { color: var(--muted); font-size: 13px; }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+    }
+    .nav-links a {
+      padding: 10px 14px;
+      border-radius: var(--pill);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      background: rgba(10,10,10,.05);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 0 20px;
+      border-radius: var(--pill);
+      font-weight: 700;
+      letter-spacing: -.01em;
+      border: 1px solid transparent;
+      box-shadow: 0 8px 0 rgba(10,10,10,.14);
+      transform: translateY(0);
+    }
+    .button:hover,
+    .button:focus-visible { transform: translateY(-2px); outline: none; }
+    .button:active { transform: translateY(4px); box-shadow: 0 3px 0 rgba(10,10,10,.14); }
+    .button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: rgba(0,0,0,.08);
+    }
+    .button.primary:hover,
+    .button.primary:focus-visible { background: var(--accent-deep); }
+    .button.secondary {
+      background: rgba(255,255,255,.07);
+      color: #f5f0e8;
+      border-color: rgba(255,255,255,.16);
+      box-shadow: 0 8px 0 rgba(0,0,0,.26);
+    }
+    .button.secondary:hover,
+    .button.secondary:focus-visible { background: rgba(255,255,255,.12); }
+    .button.ghost {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--line);
+      box-shadow: 0 8px 0 rgba(10,10,10,.08);
+    }
+
+    section { padding: 84px 0; }
+    .hero { padding: 46px 0 70px; }
+    .hero-shell {
+      background: var(--dark);
+      color: #f7f2ea;
+      border-radius: 36px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 30px 80px rgba(14,12,10,.18);
+    }
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,87,51,.22), transparent 25%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,.06), transparent 20%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 28px;
+      padding: 34px;
+      align-items: center;
+    }
+    .hero-copy h1 {
+      margin: 18px 0 18px;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: .92;
+      letter-spacing: -.06em;
+      max-width: 11ch;
+    }
+    .hero-copy p {
+      max-width: 58ch;
+      font-size: 18px;
+      color: rgba(247,242,234,.82);
+      margin-bottom: 26px;
+    }
+    .accent-line { color: var(--accent); }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .trust-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      color: rgba(247,242,234,.8);
+      font-size: 14px;
+    }
+    .trust-inline span::before {
+      content: "•";
+      color: var(--accent);
+      margin-right: 8px;
+    }
+    .hero-card-stack {
+      position: relative;
+      padding: 18px;
+    }
+    .double-bezel {
+      position: relative;
+      border-radius: 28px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 28px 40px rgba(0,0,0,.24);
+    }
+    .double-bezel::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.08);
+      pointer-events: none;
+    }
+    .double-bezel img {
+      border-radius: 20px;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    .floating-stat {
+      position: absolute;
+      right: -6px;
+      bottom: 24px;
+      background: #fff7ed;
+      color: var(--ink);
+      border: 1px solid rgba(10,10,10,.08);
+      border-radius: 22px;
+      padding: 16px 18px;
+      min-width: 220px;
+      box-shadow: var(--shadow);
+    }
+    .floating-stat strong {
+      display: block;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .floating-stat span {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .logo-strip,
+    .quote-grid,
+    .pricing-grid,
+    .faq-grid,
+    .footer-row,
+    .problem-grid,
+    .mechanism-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 30px;
+      max-width: 760px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      letter-spacing: -.05em;
+      line-height: .96;
+      color: var(--ink);
+    }
+    .section-head p { margin: 0; color: var(--muted); font-size: 18px; }
+
+    .proof-band {
+      padding-top: 26px;
+    }
+    .quote-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: var(--shadow-tight);
+    }
+    .quote-card blockquote {
+      margin: 0 0 16px;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: 24px;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+      color: var(--ink);
+    }
+    .quote-card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .problem-grid {
+      grid-template-columns: .9fr 1.1fr;
+      align-items: start;
+    }
+    .list-panel,
+    .dark-panel,
+    .light-panel {
+      border-radius: 28px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-tight);
+    }
+    .light-panel { background: var(--surface); }
+    .dark-panel {
+      background: var(--dark);
+      border-color: rgba(255,255,255,.08);
+      color: #f7f2ea;
+    }
+    .dark-panel p,
+    .dark-panel li,
+    .dark-panel .small { color: rgba(247,242,234,.78); }
+    .list-panel ul,
+    .dark-panel ul { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
+
+    .mechanism-grid {
+      grid-template-columns: .95fr 1.05fr;
+      align-items: center;
+    }
+    .steps {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+      border-radius: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: white;
+      background: var(--accent);
+      box-shadow: 0 6px 0 rgba(217,72,40,.28);
+    }
+    .step strong {
+      display: block;
+      font-family: "Satoshi", system-ui, sans-serif;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr .95fr;
+      grid-template-areas:
+        "wide tall side"
+        "wide bottom bottom";
+      gap: 18px;
+    }
+    .bento-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--shadow-tight);
+      display: grid;
+      gap: 14px;
+      min-height: 220px;
+    }
+    .bento-card h3 {
+      margin: 0;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+    .bento-card p { margin: 0; color: var(--muted); }
+    .bento-card .mini {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: var(--pill);
+      background: rgba(255,87,51,.12);
+      color: var(--accent-deep);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .bento-card ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+    .bento-card.wide { grid-area: wide; background: var(--dark); color: #f7f2ea; border-color: rgba(255,255,255,.08); }
+    .bento-card.wide p, .bento-card.wide li { color: rgba(247,242,234,.78); }
+    .bento-card.tall { grid-area: tall; }
+    .bento-card.side { grid-area: side; }
+    .bento-card.bottom { grid-area: bottom; grid-template-columns: 1fr 1fr; align-items: center; }
+
+    .pricing-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: stretch;
+    }
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: var(--shadow-tight);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .price-card.featured {
+      background: var(--dark);
+      color: #f7f2ea;
+      border-color: rgba(255,255,255,.08);
+      transform: translateY(-8px);
+    }
+    .price-card.featured p,
+    .price-card.featured li,
+    .price-card.featured .price-sub { color: rgba(247,242,234,.76); }
+    .plan-tag { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; color: var(--muted); }
+    .featured .plan-tag { color: rgba(247,242,234,.72); }
+    .price {
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: 44px;
+      line-height: .92;
+      letter-spacing: -.05em;
+    }
+    .price small { font-size: 16px; color: inherit; opacity: .75; }
+    .price-card ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+
+    .faq-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .faq-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow-tight);
+    }
+    .faq-card h3 {
+      margin: 0 0 10px;
+      font-family: "Satoshi", system-ui, sans-serif;
+      font-size: 24px;
+      letter-spacing: -.03em;
+    }
+    .faq-card p { margin: 0; color: var(--muted); }
+
+    .cta-shell {
+      background: linear-gradient(180deg, var(--dark), #171310);
+      color: #f7f2ea;
+      border-radius: 36px;
+      padding: 34px;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 30px 60px rgba(0,0,0,.18);
+    }
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr .8fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .cta-shell h2 { color: #f7f2ea; }
+    .cta-shell p { color: rgba(247,242,234,.78); }
+
+    footer { padding: 26px 0 54px; }
+    .footer-row {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid rgba(10,10,10,.08);
+      padding-top: 18px;
+    }
+    .footer-row a { text-decoration: underline; text-decoration-thickness: 1px; }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .8s var(--spring), transform .8s var(--spring);
+    }
+    [data-reveal].revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(255,87,51,.35);
+      outline-offset: 3px;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .problem-grid,
+      .mechanism-grid,
+      .cta-grid,
+      .pricing-grid,
+      .faq-grid,
+      .quote-grid { grid-template-columns: 1fr 1fr; }
+      .hero-grid > :first-child,
+      .problem-grid > :first-child,
+      .mechanism-grid > :first-child,
+      .cta-grid > :first-child { grid-column: 1 / -1; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .problem-grid,
+      .mechanism-grid,
+      .cta-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .quote-grid,
+      .faq-grid { grid-template-columns: 1fr 1fr; }
+      .bento {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "wide wide"
+          "tall side"
+          "bottom bottom";
+      }
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 66px 0; }
+      .floating-nav { width: calc(100% - 16px); padding: 10px; }
+      .nav-links { display: none; }
+      .hero-copy h1 { max-width: 8.8ch; }
+      .hero-grid { padding: 18px; }
+      .hero-card-stack { padding: 8px 0 24px; }
+      .floating-stat {
+        position: static;
+        margin-top: 14px;
+        min-width: 0;
+      }
+      .quote-grid,
+      .pricing-grid,
+      .faq-grid,
+      .bento,
+      .bento-card.bottom { grid-template-columns: 1fr; }
+      .bento {
+        grid-template-areas:
+          "wide"
+          "tall"
+          "side"
+          "bottom";
+      }
+      .price-card.featured { transform: none; }
+      .footer-row { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-nav-wrap">
+    <nav class="floating-nav" aria-label="Primary">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div>
+          <strong>StealAds</strong>
+          <span>Steal the psychology</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#problem">Problem</a>
+        <a href="#mechanism">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#proof">Proof</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <a class="button ghost" href="https://stealads.ai">Get Early Access</a>
+    </nav>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-shell" data-reveal>
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow"><span class="dot"></span>Stop copying ads. Start stealing the psychology.</span>
+              <h1>YOUR COMPETITORS'<br><span class="accent-line">ADS ARE WINNING.</span></h1>
+              <p>StealAds decodes the psychology behind high-performing ads—then generates ready-to-run creative for your brand, so your team stops inspiration-scrolling and starts shipping stronger ads.</p>
+              <div class="hero-actions">
+                <a class="button primary" href="https://stealads.ai">Get Early Access</a>
+                <a class="button secondary" href="https://stealads.ai">See It In Action</a>
+              </div>
+              <div class="trust-inline" aria-label="Trust cues">
+                <span>Used by founders, growth leaders, and creative teams</span>
+                <span>Pricing starts at $149/mo</span>
+                <span>Named early-access proof</span>
+              </div>
+            </div>
+            <div class="hero-card-stack">
+              <div class="double-bezel">
+                <img src="visuals/hero.jpg" alt="Dark StealAds-style dashboard showing ad analysis panels and performance-focused interface." />
+              </div>
+              <aside class="floating-stat" aria-label="Product proof note">
+                <strong>Not another swipe file.</strong>
+                <span>StealAds is built to decode why ads work—then turn that into brand-fit creative.</span>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof-band" id="proof">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow light"><span class="dot"></span>Proof</span>
+          <h2>Early signal, from people who know good ads when they see them.</h2>
+          <p>The proof here is honest: named testimonials and a real pricing structure. No fake precision. No invented lift stats.</p>
+        </div>
+        <div class="quote-grid">
+          <article class="quote-card" data-reveal>
+            <blockquote>“I've tried this... they're actually really good.”</blockquote>
+            <p>Christian Wiens — Founder</p>
+          </article>
+          <article class="quote-card" data-reveal>
+            <blockquote>“It's better than anything I've seen.”</blockquote>
+            <p>Chris L. — GM @ Fitness Brand</p>
+          </article>
+          <article class="quote-card" data-reveal>
+            <blockquote>“This is going to be a hugely popular tool.”</blockquote>
+            <p>Tom — Early Access User</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem">
+      <div class="container">
+        <div class="problem-grid">
+          <div class="section-head" data-reveal>
+            <span class="eyebrow light"><span class="dot"></span>The problem</span>
+            <h2>Most teams copy the ad.<br>They never steal the reason it worked.</h2>
+            <p>Your team does the same loop every week: save competitor ads, build swipe files, copy surface aesthetics, then guess what actually made people stop, click, and buy.</p>
+          </div>
+          <div class="dark-panel" data-reveal>
+            <p class="small">That workflow creates:</p>
+            <ul>
+              <li>creative rounds built on a guess</li>
+              <li>slow testing cycles and slow feedback loops</li>
+              <li>copycat ads that look familiar but convert flat</li>
+              <li>wasted production time chasing the wrong angle</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mechanism">
+      <div class="container">
+        <div class="mechanism-grid">
+          <div class="light-panel" data-reveal>
+            <span class="eyebrow light"><span class="dot"></span>How it works</span>
+            <h2 style="margin:16px 0 12px;font-family:'Satoshi',system-ui,sans-serif;font-size:clamp(2rem,4vw,3.25rem);line-height:.96;letter-spacing:-.05em;">Decode the psychology. Then generate the ad.</h2>
+            <p style="margin:0;color:var(--muted);font-size:18px;">StealAds analyzes competitor ads for the visual and psychological triggers driving performance—what grabs attention, builds desire, creates trust, and pushes the click. Then it turns those patterns into ready-to-run creative for your brand.</p>
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div><strong>Scrape the winners</strong><span>Pull in competitor ads worth studying instead of collecting random inspiration.</span></div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div><strong>Decode the pattern</strong><span>Break down the visual and psychological structure underneath performance.</span></div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div><strong>Generate the creative</strong><span>Produce brand-fit ad concepts and variations your team can edit and run.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="double-bezel" data-reveal>
+            <img src="visuals/ui-mockup.jpg" alt="Concept screenshot of a dark analytics dashboard showing psychological ad analysis and generated creative ideas." />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow light"><span class="dot"></span>Feature system</span>
+          <h2>An asymmetric stack built for operators, not inspiration hoarders.</h2>
+          <p>Each section of the product exists to move a growth team from “that ad looks good” to “we know why it works and what to run next.”</p>
+        </div>
+        <div class="bento">
+          <article class="bento-card wide" data-reveal>
+            <span class="mini">Core mechanism</span>
+            <h3>Psychological Analysis</h3>
+            <p>Move past aesthetics. See the emotional and persuasive structure behind ads that are already winning in-market.</p>
+            <ul>
+              <li>attention hooks</li>
+              <li>desire triggers</li>
+              <li>trust builders</li>
+              <li>conversion pressure points</li>
+            </ul>
+          </article>
+          <article class="bento-card tall" data-reveal>
+            <span class="mini">Input</span>
+            <h3>Ad Scraping</h3>
+            <p>Pull ads into one workflow instead of bouncing between libraries, screenshots, and scattered swipe files.</p>
+          </article>
+          <article class="bento-card side" data-reveal>
+            <span class="mini">Brand fit</span>
+            <h3>Brand Agent</h3>
+            <p>Adapt the winning psychology to your brand voice so the output still sounds like you.</p>
+          </article>
+          <article class="bento-card bottom" data-reveal>
+            <div>
+              <span class="mini">Output speed</span>
+              <h3>Bulk Generation + Editing</h3>
+              <p>Generate multiple angles quickly, refine them, and keep the team shipping instead of waiting on another brief.</p>
+            </div>
+            <div>
+              <span class="mini">Catalog context</span>
+              <h3>Product Sync</h3>
+              <p>Connect product context so generated creative stays grounded in what you're actually selling.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="mechanism-grid">
+          <div class="double-bezel" data-reveal>
+            <img src="visuals/lifestyle.jpg" alt="A marketer at a desk reviewing ad analytics and campaign performance on a dark screen." />
+          </div>
+          <div class="light-panel" data-reveal>
+            <span class="eyebrow light"><span class="dot"></span>Why buyers care</span>
+            <h2 style="margin:16px 0 12px;font-family:'Satoshi',system-ui,sans-serif;font-size:clamp(2rem,4vw,3.25rem);line-height:.96;letter-spacing:-.05em;">Built for the team already wasting hours on “research.”</h2>
+            <p style="margin:0 0 14px;color:var(--muted);font-size:18px;">Heads of Growth, creative strategists, and founders don't need more inspiration. They need a tighter path from market intelligence to ad output.</p>
+            <ul style="margin:0;padding-left:18px;display:grid;gap:10px;color:var(--muted);">
+              <li>Less manual digging through ad libraries</li>
+              <li>Less guesswork in creative reviews</li>
+              <li>More testable concepts, faster</li>
+              <li>More confidence in why an angle should work</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow light"><span class="dot"></span>Pricing</span>
+          <h2>Real plans. Real buying intent. Built for teams that actually run ads.</h2>
+          <p>Pricing is part of the trust cue: this isn't a vague AI experiment page. It's a real product ladder for operators, teams, and agencies.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card" data-reveal>
+            <div class="plan-tag">Growth</div>
+            <div class="price">$149 <small>/mo</small></div>
+            <div class="price-sub">For solo operators and lean growth teams.</div>
+            <ul>
+              <li>Competitor ad analysis</li>
+              <li>Psychology breakdowns</li>
+              <li>Core creative generation</li>
+            </ul>
+          </article>
+          <article class="price-card featured" data-reveal>
+            <div class="plan-tag">Scale</div>
+            <div class="price">$299 <small>/mo</small></div>
+            <div class="price-sub">For teams shipping more tests, more often.</div>
+            <ul>
+              <li>Bulk generation</li>
+              <li>Brand-fit creative workflow</li>
+              <li>Faster iteration</li>
+            </ul>
+          </article>
+          <article class="price-card" data-reveal>
+            <div class="plan-tag">Agency</div>
+            <div class="price">$599 <small>/mo</small></div>
+            <div class="price-sub">For client work and multi-brand creative systems.</div>
+            <ul>
+              <li>Higher-volume usage</li>
+              <li>Brand switching</li>
+              <li>Team workflow support</li>
+            </ul>
+          </article>
+          <article class="price-card" data-reveal>
+            <div class="plan-tag">Managed</div>
+            <div class="price">$3000 <small>/mo</small></div>
+            <div class="price-sub">For brands that want strategy + execution support.</div>
+            <ul>
+              <li>Hands-on help</li>
+              <li>Strategic oversight</li>
+              <li>High-touch output</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow light"><span class="dot"></span>Objections</span>
+          <h2>What sophisticated buyers are going to ask before they click.</h2>
+          <p>The page answers the real blockers: category confusion, brand-fit fear, and whether this is just another spy tool with a prettier wrapper.</p>
+        </div>
+        <div class="faq-grid">
+          <article class="faq-card" data-reveal>
+            <h3>Is this just another ad spy tool?</h3>
+            <p>No. Spy tools show what competitors are running. StealAds is designed to decode why those ads work—then turn that psychology into fresh creative for your brand.</p>
+          </article>
+          <article class="faq-card" data-reveal>
+            <h3>Will the output still sound like us?</h3>
+            <p>That's what the Brand Agent and editing workflow are for. The goal is not to clone competitor ads. It's to adapt the winning psychology to your voice, offer, and product.</p>
+          </article>
+          <article class="faq-card" data-reveal>
+            <h3>What if we already have a creative team?</h3>
+            <p>Then this gives them leverage where it matters: sharper inputs, faster iteration, and fewer dead-end creative rounds based on guesswork.</p>
+          </article>
+          <article class="faq-card" data-reveal>
+            <h3>Is it live or early access?</h3>
+            <p>The current safest framing is early access. The CTA language preserves that until the live status and exact signup flow are confirmed.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="cta-shell" data-reveal>
+          <div class="cta-grid">
+            <div>
+              <span class="eyebrow"><span class="dot"></span>Final CTA</span>
+              <h2 style="margin:16px 0 12px;font-family:'Satoshi',system-ui,sans-serif;font-size:clamp(2.2rem,4vw,3.5rem);line-height:.96;letter-spacing:-.05em;">Stop guessing why competitor ads work.</h2>
+              <p>Start stealing the psychology—and turn it into creative your team can actually run.</p>
+              <div class="hero-actions" style="margin-top:24px; margin-bottom:0;">
+                <a class="button primary" href="https://stealads.ai">Get Early Access</a>
+                <a class="button secondary" href="https://stealads.ai">Steal an Ad Now</a>
+              </div>
+            </div>
+            <div class="light-panel">
+              <span class="eyebrow light"><span class="dot"></span>Built for</span>
+              <h3 style="margin:16px 0 12px;font-family:'Satoshi',system-ui,sans-serif;font-size:30px;line-height:1;letter-spacing:-.04em;">Heads of Growth. Creative Strategists. Founders.</h3>
+              <p style="margin:0;color:var(--muted);">If your team is stuck between inspiration scrolling and manual ad creation, this page angle is built for you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>StealAds preview page — mechanism-first SaaS landing page draft.</div>
+      <div><a href="https://bigplayers.co">Built with Page Factory by Big Players</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

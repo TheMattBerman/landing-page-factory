@@ -1,0 +1,31 @@
+{
+  "brand": "StealAds",
+  "colors": {
+    "background": "#f5f0e8",
+    "background_alt": "#ece4d8",
+    "surface_light": "#fffaf3",
+    "surface_dark": "#111111",
+    "off_black": "#0a0a0a",
+    "accent": "#FF5733",
+    "accent_deep": "#d94828",
+    "text": "#1a1a1a",
+    "text_muted": "#5f5a52",
+    "border": "#d8cec1"
+  },
+  "fonts": {
+    "headline": "Satoshi, Inter, Arial, sans-serif",
+    "body": "DM Sans, Inter, Arial, sans-serif"
+  },
+  "radius": {
+    "small": "12px",
+    "medium": "18px",
+    "large": "28px",
+    "pill": "999px"
+  },
+  "surface_treatment": {
+    "page_background": "warm bone solid with subtle radial wash",
+    "cards": "bone/light cards with thin dark outlines and selective dark cards",
+    "shadows": "tinted low-blur shadows, no neon glow"
+  },
+  "confidence_notes": "Accent color and original palette are source-provided. Warm bone background, off-black substitution, and font system are intentional anti-slop improvements that preserve brand aggression while avoiding generic AI aesthetics."
+}

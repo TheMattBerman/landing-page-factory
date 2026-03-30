@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# firecrawl-extract.sh — Extract brand DNA via Firecrawl API
+# firecrawl-extract.sh — Extract brand DNA via Firecrawl API v2
 # Usage: bash firecrawl-extract.sh --url "https://example.com" [--output workspace/brand]
+#
+# Uses Firecrawl's branding format for structured brand identity extraction
+# (logo, colors, fonts, spacing, UI components) plus markdown for content.
 #
 # Requires: FIRECRAWL_API_KEY env var (get one at https://firecrawl.dev)
 
@@ -39,87 +42,99 @@ fi
 
 mkdir -p "$OUTPUT_DIR"
 
-echo "🔥 Extracting brand DNA via Firecrawl: $URL"
+echo "🔥 Extracting brand DNA via Firecrawl v2: $URL"
 
-# Build the extraction schema
-SCHEMA='{
-  "url": "'"$URL"'",
-  "formats": ["markdown", "extract"],
-  "extract": {
-    "schema": {
-      "type": "object",
-      "properties": {
-        "brand_name": {"type": "string", "description": "Company or brand name"},
-        "tagline": {"type": "string", "description": "Brand tagline or slogan"},
-        "headline": {"type": "string", "description": "Main hero headline on the page"},
-        "subheadline": {"type": "string", "description": "Subheadline or supporting text"},
-        "cta_buttons": {"type": "array", "items": {"type": "string"}, "description": "All CTA button text on the page"},
-        "value_propositions": {"type": "array", "items": {"type": "string"}, "description": "Key value propositions or benefits"},
-        "social_proof": {"type": "array", "items": {"type": "string"}, "description": "Testimonials, customer counts, press mentions, trust badges"},
-        "products": {"type": "array", "items": {"type": "object", "properties": {"name": {"type": "string"}, "price": {"type": "string"}, "description": {"type": "string"}}}, "description": "Products or services offered"},
-        "colors": {"type": "object", "properties": {"primary": {"type": "string"}, "secondary": {"type": "string"}, "accent": {"type": "string"}, "background": {"type": "string"}, "text": {"type": "string"}}, "description": "Brand colors as hex codes"},
-        "fonts": {"type": "object", "properties": {"headline": {"type": "string"}, "body": {"type": "string"}}, "description": "Font families used"},
-        "tone": {"type": "string", "description": "Overall tone: casual, professional, playful, luxury, urgent, etc."},
-        "target_audience": {"type": "string", "description": "Who this brand is targeting based on language and imagery"},
-        "unique_selling_point": {"type": "string", "description": "What makes this brand different from competitors"},
-        "objection_handling": {"type": "array", "items": {"type": "string"}, "description": "FAQ items, guarantees, risk reversal language"},
-        "logo_url": {"type": "string", "description": "URL of the brand logo if found"}
-      }
-    }
-  }
-}'
+# Use Firecrawl v2 with branding + markdown + screenshot formats
+# branding = structured brand identity (logo, colors, fonts, spacing, UI)
+# markdown = page content for claim/proof extraction
+# screenshot = visual reference
+PAYLOAD=$(cat <<EOF
+{
+  "url": "$URL",
+  "formats": ["branding", "markdown", "screenshot"],
+  "onlyMainContent": false,
+  "maxAge": 172800000
+}
+EOF
+)
 
-# Make the API call
-echo "  → Calling Firecrawl API..."
-RESPONSE=$(curl -s -X POST "https://api.firecrawl.dev/v1/scrape" \
+echo "  → Calling Firecrawl v2 API..."
+RESPONSE=$(curl -s -X POST "https://api.firecrawl.dev/v2/scrape" \
   -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
   -H "Content-Type: application/json" \
-  -d "$SCHEMA" \
+  -d "$PAYLOAD" \
   --max-time 60)
 
 # Check for errors
 if echo "$RESPONSE" | jq -e '.success == false' &>/dev/null; then
   ERROR=$(echo "$RESPONSE" | jq -r '.error // "Unknown error"')
   echo "❌ Firecrawl error: $ERROR"
+  echo "$RESPONSE" | jq '.' > "$OUTPUT_DIR/firecrawl-error.json" 2>/dev/null
   exit 1
 fi
 
 # Save raw response
 echo "$RESPONSE" | jq '.' > "$OUTPUT_DIR/firecrawl-raw.json" 2>/dev/null || echo "$RESPONSE" > "$OUTPUT_DIR/firecrawl-raw.json"
 
-# Extract structured data
-echo "$RESPONSE" | jq '.data.extract' > "$OUTPUT_DIR/extract.json" 2>/dev/null
+# Extract branding data (the main brand identity payload)
+BRANDING=$(echo "$RESPONSE" | jq '.data.branding // {}' 2>/dev/null)
+echo "$BRANDING" | jq '.' > "$OUTPUT_DIR/extract.json" 2>/dev/null
 
-# Extract markdown content
+# Extract markdown content for claim/proof analysis
 echo "$RESPONSE" | jq -r '.data.markdown // empty' > "$OUTPUT_DIR/extract-markdown.md" 2>/dev/null
 
 # Extract metadata
-echo "$RESPONSE" | jq '.data.metadata' > "$OUTPUT_DIR/extract-metadata.json" 2>/dev/null
+echo "$RESPONSE" | jq '.data.metadata // {}' > "$OUTPUT_DIR/extract-metadata.json" 2>/dev/null
 
-# Build palette.json from extracted colors
-COLORS=$(echo "$RESPONSE" | jq '.data.extract.colors // {}' 2>/dev/null)
-FONTS=$(echo "$RESPONSE" | jq '.data.extract.fonts // {}' 2>/dev/null)
-BRAND=$(echo "$RESPONSE" | jq -r '.data.extract.brand_name // "Unknown"' 2>/dev/null)
+# Extract screenshot URL if available
+SCREENSHOT_URL=$(echo "$RESPONSE" | jq -r '.data.screenshot // empty' 2>/dev/null)
+if [[ -n "$SCREENSHOT_URL" ]]; then
+  echo "  → Downloading screenshot..."
+  curl -sL "$SCREENSHOT_URL" -o "$OUTPUT_DIR/screenshot.png" --max-time 15 2>/dev/null || echo "  ⚠ Screenshot download failed (URL may have expired)"
+fi
+
+# Build palette.json from branding data
+COLORS=$(echo "$BRANDING" | jq '.colors // {}' 2>/dev/null)
+FONTS=$(echo "$BRANDING" | jq '.fonts // []' 2>/dev/null)
+LOGO=$(echo "$BRANDING" | jq -r '.logo // empty' 2>/dev/null)
+COLOR_SCHEME=$(echo "$BRANDING" | jq -r '.colorScheme // "unknown"' 2>/dev/null)
+SPACING=$(echo "$BRANDING" | jq '.spacing // {}' 2>/dev/null)
 
 cat > "$OUTPUT_DIR/palette.json" << EOF
 {
-  "brand": "$BRAND",
+  "source": "$URL",
+  "colorScheme": "$COLOR_SCHEME",
+  "logo": "$LOGO",
   "colors": $COLORS,
   "fonts": $FONTS,
-  "source": "$URL",
-  "extracted_at": "$(date -Iseconds)"
+  "spacing": $SPACING,
+  "extracted_at": "$(date -Iseconds)",
+  "method": "firecrawl-v2-branding"
 }
 EOF
 
-# Credits used
-CREDITS=$(echo "$RESPONSE" | jq '.data.metadata.creditsUsed // "unknown"' 2>/dev/null)
+# Download logo if URL found
+if [[ -n "$LOGO" && "$LOGO" != "null" ]]; then
+  echo "  → Downloading logo..."
+  LOGO_EXT="${LOGO##*.}"
+  # Default to png if extension is unclear
+  [[ "$LOGO_EXT" =~ ^(png|jpg|jpeg|svg|webp|ico)$ ]] || LOGO_EXT="png"
+  curl -sL "$LOGO" -o "$OUTPUT_DIR/logo.$LOGO_EXT" --max-time 10 2>/dev/null || echo "  ⚠ Logo download failed"
+fi
 
 echo ""
 echo "✅ Brand extraction complete!"
-echo "   Credits used: $CREDITS"
 echo "   Output: $OUTPUT_DIR/"
 echo "   Files:"
 ls -1 "$OUTPUT_DIR"/ 2>/dev/null | sed 's/^/     /'
 echo ""
+
+# Show key brand data
+echo "   Brand identity:"
+echo "     Color scheme: $COLOR_SCHEME"
+echo "     Logo: ${LOGO:-not found}"
+echo "     Primary color: $(echo "$COLORS" | jq -r '.primary // "n/a"' 2>/dev/null)"
+echo "     Font: $(echo "$FONTS" | jq -r '.[0].family // "n/a"' 2>/dev/null)"
+echo ""
 echo "→ Next: Run /brand-profile to build full identity"
-echo "→ Or: Jump to /page-copy if extract looks good"
+echo "→ Or: Run /page-strategy to plan the page"

@@ -152,6 +152,35 @@ Confidence: high | medium | low
 - `missing_flags[]`
 - `confidence`
 
+## Firecrawl integration
+
+When Firecrawl is available, use the v2 API with the `branding` format:
+
+```bash
+curl -s -X POST "https://api.firecrawl.dev/v2/scrape" \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://example.com",
+    "formats": ["branding", "markdown", "screenshot"],
+    "onlyMainContent": false,
+    "maxAge": 172800000
+  }'
+```
+
+The `branding` format returns structured brand identity:
+- logo URL
+- color palette (primary, secondary, accent, background, text)
+- font families
+- spacing scale
+- UI component styles
+- color scheme (light/dark)
+
+The `markdown` format provides page content for claim and proof extraction.
+The `screenshot` format provides a visual reference (URL expires after 24h).
+
+Use `scripts/firecrawl-extract.sh` to run this automatically and save all outputs.
+
 ## Deep mode
 
 When `--deep` is used:

@@ -1,0 +1,111 @@
+{
+  "page": "stealads-preview",
+  "brand": "StealAds",
+  "page_type": "saas_app",
+  "built": "2026-03-30",
+  "confidence": "medium-high",
+  "core": {
+    "product": "AI ad intelligence and creative generation tool",
+    "offer": "Analyze competitor ads psychologically and generate ready-to-run brand creatives",
+    "pricing_range": "$149/mo to $3,000/mo",
+    "audience": ["Heads of Growth", "Creative Strategists", "Founders"],
+    "awareness_stage": "problem-aware to solution-aware",
+    "cta_action": "Get Early Access",
+    "cta_destination": "https://stealads.ai",
+    "conversion_goal": "early access signup / email capture"
+  },
+  "mechanism": {
+    "buyer_job": "Beat competitors on paid social without burning weeks on manual research",
+    "primary_pain": "Hours lost to inspiration scrolling and copying aesthetics without understanding why ads work",
+    "failed_alternatives": ["Manual swipe files", "Ad libraries", "Expensive creative teams"],
+    "unique_mechanism": "AI psychological deconstruction — breaks down visual and psychological elements driving ad performance, then generates creatives engineered to same psychological triggers",
+    "must_show_visually": "Product UI — ad analysis dashboard with psychological breakdown panels",
+    "must_explain_verbally": "The decode-then-generate loop and why it beats surface-level copying"
+  },
+  "claims": {
+    "allowed": [
+      "Your competitors' ads are winning",
+      "Decodes the psychology behind high-performing ads",
+      "Generates ready-to-run creative for your brand",
+      "Exact testimonial quotes with attribution"
+    ],
+    "forbidden": [
+      "Specific conversion lift percentages",
+      "Time-saved statistics",
+      "Named brand clients not in source",
+      "Guarantee language not in source"
+    ],
+    "requires_proof_nearby": [
+      "Chris L. quote requires GM @ Fitness Brand attribution",
+      "All testimonials need name and title"
+    ]
+  },
+  "proof_inventory": [
+    {
+      "item": "Christian Wiens testimonial",
+      "class": "testimonial",
+      "provenance": "observed",
+      "exact_quote": "I've tried this... they're actually really good.",
+      "attribution": "Christian Wiens, Founder",
+      "shippable": true
+    },
+    {
+      "item": "Chris L. testimonial",
+      "class": "testimonial",
+      "provenance": "observed",
+      "exact_quote": "It's better than anything I've seen.",
+      "attribution": "Chris L., GM @ Fitness Brand",
+      "shippable": true
+    },
+    {
+      "item": "Tom testimonial",
+      "class": "testimonial",
+      "provenance": "observed",
+      "exact_quote": "This is going to be a hugely popular tool.",
+      "attribution": "Tom, Early Access User",
+      "shippable": true
+    },
+    {
+      "item": "Product UI screenshots",
+      "class": "product_proof",
+      "provenance": "concept_support",
+      "shippable": false,
+      "note": "Placeholder — no real assets from brief"
+    }
+  ],
+  "cta_inventory": [
+    {"text": "Get Early Access", "role": "primary", "above_fold": true},
+    {"text": "See It In Action", "role": "secondary", "above_fold": true},
+    {"text": "Steal an Ad Now", "role": "close", "above_fold": false}
+  ],
+  "preservation": {
+    "language": ["steal the psychology", "ready-to-run creative", "your competitors' ads are winning", "decode"],
+    "trust_cues": ["Named testimonials", "Early Access framing", "Pricing tiers"],
+    "visual": ["Off-black dominant", "Orange #FF5733 accent", "High contrast dark UI"]
+  },
+  "page_routing": {
+    "hero_structure": "Confrontational headline + outcome subhead + dual CTA + product UI visual",
+    "proof_structure": "Testimonial trio + pricing grid",
+    "required_sections": ["hero", "problem", "mechanism", "features", "proof", "pricing", "faq", "cta_close"],
+    "optional_sections": ["comparison_table"]
+  },
+  "visual_requirements": {
+    "preservation_class": "concept_support",
+    "screenshot_handling": "required_mockup",
+    "ui_fidelity_needed": true
+  },
+  "review_flags": [
+    "CTA destination URL unconfirmed",
+    "Product screenshots are concept-support only",
+    "Early Access framing — confirm live vs waitlist",
+    "No stat-based proof available"
+  ],
+  "features": [
+    "Ad Scraping",
+    "Psychological Analysis",
+    "Brand Agent",
+    "Bulk Generation",
+    "Product Sync",
+    "Editing"
+  ]
+}
