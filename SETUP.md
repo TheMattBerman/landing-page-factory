@@ -1,152 +1,226 @@
 # Landing Page Factory — Setup Guide
 
-Get your AI landing page builder running in 5 minutes.
+Pick your path. Same skills, same pipeline, same output — different interfaces.
 
 ---
 
-## Step 1: Clone and Install
+## Path A: Claude Cowork (No Terminal Required)
 
-```bash
-git clone https://github.com/themattberman/landing-page-factory.git
-cd landing-page-factory
-bash install.sh
-```
+**Time to first page: ~2 minutes**
 
-This creates the workspace directories and checks dependencies.
+Best for: Marketers, founders, anyone who wants to build landing pages without touching a terminal.
 
----
+### Step 1: Download the Kit
 
-## Step 2: Verify Setup
+Download this repo as a ZIP from GitHub, or clone it if you're comfortable with git.
 
-```bash
-bash doctor.sh
-```
+### Step 2: Create a Claude Project
 
-You should see all green checks. The health check verifies:
-- All 7 skills are present
-- Required dependencies (curl, python3) are installed
-- Optional dependencies (jq) noted
-- Workspace directories exist
+1. Go to [claude.ai](https://claude.ai)
+2. Create a new Project (or open an existing one)
+3. In Project Knowledge, upload these folders:
+   - `skills/` — all 7 skill folders
+   - `references/` — eval rubric and anti-slop reference
 
----
+That's the entire setup.
 
-## Step 3: Configure Firecrawl (Optional, Recommended)
+### Step 3: Build Your First Page
 
-[Firecrawl](https://firecrawl.dev) provides deep site extraction — multiple pages, structured data, better coverage.
-
-1. Sign up at [firecrawl.dev](https://firecrawl.dev) (free tier available)
-2. Get your API key
-3. Set it:
-
-```bash
-cp .env.example .env
-# Edit .env and add your key
-```
-
-Or export directly:
-
-```bash
-export FIRECRAWL_API_KEY=your_key_here
-```
-
-**Without Firecrawl:** The kit falls back to basic extraction (curl + readability). Works fine for simple sites, but deep extraction covers more pages and gets better proof/trust cue coverage.
-
----
-
-## Step 4: Image Generation
-
-Page Visuals uses whatever image generation model your OpenClaw instance has configured.
-
-Supported providers:
-- **OpenAI** — DALL-E 3, GPT Image
-- **Google** — Gemini image generation
-- **Fal.ai** — Various models
-- **Any provider** configured in OpenClaw
-
-No additional setup needed — it uses your existing OpenClaw image generation config.
-
-If no image generation is configured, the visual stage will create shot plans but skip generation. You can provide your own images instead.
-
----
-
-## Step 5: Run Your First Page
-
-### With OpenClaw (recommended)
-
-```bash
-openclaw start
-```
-
-Then message:
+Start a new conversation in your project and say:
 
 ```
 Build me a landing page for https://ridgewallet.com
 ```
 
-The agent runs the full 7-stage pipeline and produces a complete page package.
+Claude reads the skills automatically, runs the 7-stage pipeline, and produces:
+- Brand extraction with proof inventory
+- Page strategy with mechanism map
+- Conversion copy with sharpness audit
+- Visual shot plan
+- Single-file HTML page
+- QA report with shippability verdict
 
-### Manual (stage by stage)
+### Tips for Claude Cowork
+
+**Build variants:**
+```
+Now build a version targeting women 25-35 with the time-saving angle
+```
+
+**Upload your own images:**
+Drop product photos into the conversation. Claude uses them instead of generating images, which gives better product fidelity.
+
+**Score the output:**
+```
+Run the sharpness audit on this copy
+```
+```
+Score this page against the eval rubric
+```
+
+**Multi-page sessions:**
+Extract the brand once, then build multiple pages in the same conversation:
+```
+Build me a landing page for https://mysite.com
+```
+Then:
+```
+Now build one for the enterprise audience
+Now build one with the cost-saving angle
+Now build one for the UK market
+```
+
+The brand data persists in the conversation — each variant only needs new strategy, copy, and build.
+
+---
+
+## Path B: OpenClaw (Agent Framework)
+
+**Time to first page: ~10 minutes**
+
+Best for: Developers, agencies, power users who want automation, cron jobs, and multi-agent orchestration.
+
+### Step 1: Install
 
 ```bash
-# 1. Extract brand facts from URL
+# Install OpenClaw (if you haven't already)
+npm install -g openclaw
+
+# Clone the kit
+git clone https://github.com/themattberman/landing-page-factory.git
+cd landing-page-factory
+
+# Run install
+bash install.sh
+
+# Verify
+bash doctor.sh
+```
+
+### Step 2: Configure (Optional)
+
+```bash
+cp .env.example .env
+# Add your Firecrawl API key for deep extraction
+# Without it, basic extraction still works
+```
+
+### Step 3: Start the Agent
+
+```bash
+openclaw start
+```
+
+Then message naturally:
+
+```
+Build me a landing page for https://ridgewallet.com
+```
+
+Or run stages individually:
+
+```bash
 /site-extract https://ridgewallet.com --deep
-
-# 2. Create page strategy
-/page-strategy --page my-first-page
-
-# 3. Build brand profile
+/page-strategy --page ridge-wallet-v1
 /brand-profile
+/page-copy --page ridge-wallet-v1
+/page-visuals --page ridge-wallet-v1
+/page-build --page ridge-wallet-v1
+/page-qa --page ridge-wallet-v1
+```
 
-# 4. Write copy
-/page-copy --page my-first-page
+### Step 4: Review Output
 
-# 5. Generate visuals
-/page-visuals --page my-first-page
+```
+workspace/pages/ridge-wallet-v1/
+├── strategy.md + strategy.json
+├── copy.md
+├── visuals/
+├── index.html          ← open in browser
+├── meta.json
+└── qa.md               ← check the verdict
+```
 
-# 6. Build the page
-/page-build --page my-first-page
+### Compare Variants
 
-# 7. Run QA
-/page-qa --page my-first-page
+```bash
+bash scripts/eval-summary.sh
+```
+
+Output:
+```
+ridge-wallet-v1: SHIPPABLE | copy: 8.3 | visual: 8.5 | qa: 8.4 | overall: 8.4
+ridge-wallet-time: SHIPPABLE | copy: 8.7 | visual: 8.1 | qa: 8.3 | overall: 8.3
+ridge-wallet-enterprise: DRAFT ONLY | copy: 7.9 | visual: 7.5 | qa: 7.6 | overall: 7.7
+```
+
+### Chain With Other Kits
+
+```
+Meta Ads Kit → find winning angles
+Landing Page Factory → build matched pages for each angle
+Deploy to Vercel/Netlify
+Meta Ads Kit → monitor performance
+Iterate
 ```
 
 ---
 
-## Step 6: Review Your Output
+## Path C: Hermes / Other Agent Frameworks
 
-After a successful run, check `workspace/pages/[page-name]/`:
+**Time to first page: ~5 minutes**
 
-```
-workspace/pages/my-first-page/
-├── strategy.md        # Mechanism map, claims control
-├── strategy.json      # Machine-readable strategy
-├── copy.md            # Full copy with sharpness audit
-├── visuals/
-│   ├── index.md       # Shot plan
-│   └── *.jpg          # Generated images
-├── index.html         # The page (open in browser)
-├── meta.json          # Build metadata
-└── qa.md              # QA report + verdict
-```
+Best for: Users of Hermes, Cursor, Windsurf, or custom agent setups.
 
-Open `index.html` in your browser to preview. Check `qa.md` for the shippability verdict.
+### Hermes
+Copy `skills/` and `references/` into your Hermes workspace. The agent discovers them automatically.
+
+### Cursor / Windsurf / Cline
+Add the skill SKILL.md files as project rules or context. The pipeline logic is in the markdown — any LLM that can follow instructions can run it.
+
+### Custom / DIY
+Feed the SKILL.md contents as system context. The skills are self-contained — they describe inputs, outputs, rules, and hand-off logic. No proprietary runtime needed.
+
+---
+
+## Firecrawl Setup (All Paths)
+
+[Firecrawl](https://firecrawl.dev) provides deep site extraction — scrapes multiple pages for better proof and trust cue coverage.
+
+1. Sign up at [firecrawl.dev](https://firecrawl.dev) (free tier available)
+2. Get your API key
+3. Set it however your platform expects:
+   - **OpenClaw:** `export FIRECRAWL_API_KEY=your_key` or add to `.env`
+   - **Claude Cowork:** Tell Claude your Firecrawl key in the conversation, or skip it — Claude can extract directly from URLs
+   - **Other:** Pass the key to the extraction scripts
+
+**Without Firecrawl:** Everything still works. Basic extraction covers single pages well. Deep extraction is better for proof-heavy sites with testimonials, case studies, or pricing spread across multiple pages.
 
 ---
 
 ## Building Variant Pages
 
-The real power is building multiple pages from the same brand:
+The real power is building multiple pages from the same brand.
 
-```bash
-# Same brand, different angle
-/page-strategy --page ridge-time-saving    # Time-saving angle
-/page-strategy --page ridge-status         # Status angle
-/page-strategy --page ridge-enterprise     # Enterprise audience
+### Same brand, different angles
+```
+Build a page with the time-saving angle
+Build a page with the status angle
+Build a page with the cost-reduction angle
+```
 
-# Each gets its own copy, visuals, build, QA
-/page-copy --page ridge-time-saving
-/page-build --page ridge-time-saving
-# ... etc
+### Same brand, different audiences
+```
+Build a page targeting enterprise CTOs
+Build a page targeting startup founders
+Build a page targeting marketing directors
+```
+
+### Same brand, different geos
+```
+Build a page for the US market
+Build a page for the UK market (British English, GBP pricing)
+Build a page for the DACH region (German)
 ```
 
 The brand extract and profile are shared. Strategy, copy, visuals, and build are per-page.
@@ -156,50 +230,30 @@ The brand extract and profile are shared. Strategy, copy, visuals, and build are
 ## Combining With Other Kits
 
 ### Meta Ads Kit → Landing Page Factory
-
-```
-1. Meta Ads Kit finds winning ad angles
-2. Landing Page Factory builds a page matching each angle
+1. Meta Ads Kit finds winning ad angles and detects fatigue
+2. Landing Page Factory builds a matched page for each winning angle
 3. Deploy pages
-4. Meta Ads Kit monitors performance
-5. Iterate
-```
+4. Meta Ads Kit monitors click-to-conversion performance
+5. Iterate: kill underperformers, build new variants for emerging winners
 
 ### SEO Kit → Landing Page Factory
-
-```
-1. SEO Kit discovers keyword opportunities
+1. SEO Kit discovers keyword opportunities (positions 5-20)
 2. Landing Page Factory builds SEO-optimized pages per keyword cluster
 3. Deploy
-4. SEO Kit monitors rankings
-```
+4. SEO Kit monitors ranking movement
+5. Iterate based on what's climbing
 
 ---
 
 ## Troubleshooting
 
-**"Mechanism unclear" — pipeline stopped at strategy**
-The source site doesn't clearly explain *why* the product works. Provide a manual brief with mechanism details, or extract from additional product pages.
-
-**"Proof too thin" — page marked Draft Only**
-Not enough verifiable proof (testimonials, stats, logos) found on the source site. Add proof manually or use softer claims.
-
-**"Image gen failing on exact product"**
-AI image generation struggles with exact product fidelity. Provide real product photos, or let the system downgrade to branded environment visuals.
-
-**"Firecrawl rate limited"**
-The free tier has limits. Wait and retry, or use basic extraction as fallback.
-
----
-
-## What's Next
-
-Once you're comfortable with single pages, try:
-
-1. **Batch generation** — Multiple pages from one brand, different angles
-2. **A/B variants** — Same page, different headlines or CTAs
-3. **Campaign pairing** — Match pages to specific ad creatives
-4. **Multi-brand** — Run the pipeline for different clients
+| Problem | Fix |
+|---------|-----|
+| "Mechanism unclear" — pipeline stops at strategy | Source site doesn't explain *why* the product works. Provide a manual brief or extract from additional product pages. |
+| "Proof too thin" — page marked Draft Only | Not enough verifiable proof found on source. Add proof manually or accept softer claims. |
+| Image gen can't match exact product | AI struggles with exact product fidelity. Provide real product photos or let it downgrade to branded environment. |
+| Firecrawl rate limited | Free tier has limits. Wait and retry, or use basic extraction. |
+| Claude runs out of context in a long session | Start a new conversation for each brand. Variants of the same brand can share a conversation. |
 
 ---
 

@@ -2,10 +2,9 @@
 
 An AI agent that turns any URL into a deployable landing page — with real brand voice, real proof, and zero AI slop.
 
-Built with [OpenClaw](https://openclaw.ai) — the AI agent framework.
+Works with [Claude Cowork](https://claude.ai), [OpenClaw](https://openclaw.ai), or any agent framework that supports skills.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![OpenClaw](https://img.shields.io/badge/Built%20with-OpenClaw-blue)](https://openclaw.ai)
 
 ---
 
@@ -49,26 +48,49 @@ If you're running my [Meta Ads Kit](https://github.com/themattberman/meta-ads-ki
 
 ## Quick Start
 
+### Option A: Claude Cowork (Easiest — no setup required)
+
+If you use [Claude](https://claude.ai) with Cowork, this is the simplest path:
+
+1. Download this repo (or clone it)
+2. Add the `skills/` folder to your Claude Cowork project
+3. Start a conversation and say:
+
+```
+Build me a landing page for https://ridgewallet.com
+```
+
+Claude reads the skills, runs the pipeline, and produces the full page package. No terminal, no installation, no config files.
+
+**That's it.** Claude handles extraction, strategy, copy, visuals, build, and QA — all guided by the skills in this repo.
+
+> **Tip:** For best results, also add `references/eval-rubric.md` and `references/anti-slop.md` to your project so Claude can score and QA the output.
+
+### Option B: OpenClaw (Full agent framework)
+
+For developers and power users who want automation, cron jobs, and multi-agent orchestration:
+
 ```bash
 git clone https://github.com/themattberman/landing-page-factory.git
 cd landing-page-factory
 
-# Install
+# Install dependencies and workspace
 bash install.sh
 
-# Health check
+# Verify everything is set up
 bash doctor.sh
-```
 
-Then run the full pipeline:
-
-```bash
-# With OpenClaw agent
+# Start the agent
 openclaw start
-# Then: "Build me a landing page for https://ridgewallet.com"
 ```
 
-Or run each stage manually:
+Then message it naturally:
+
+```
+Build me a landing page for https://ridgewallet.com
+```
+
+Or run each stage individually:
 
 ```bash
 /site-extract https://ridgewallet.com --deep
@@ -79,6 +101,16 @@ Or run each stage manually:
 /page-build --page ridge-wallet-v1
 /page-qa --page ridge-wallet-v1
 ```
+
+### Option C: Any Agent Framework
+
+The skills are plain markdown files. They work with any AI agent that can read instructions:
+
+- **Hermes** — Drop skills into your workspace
+- **Cursor / Windsurf** — Add as project context
+- **Custom setups** — Feed the SKILL.md files as system context
+
+The pipeline logic lives in the skills themselves, not in proprietary tooling.
 
 ---
 
@@ -251,28 +283,55 @@ If you're running [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) 
 
 ---
 
-## Running With OpenClaw
+## Platform Guide
 
-This kit is built for [OpenClaw](https://openclaw.ai), an open-source AI agent framework.
+### Claude Cowork
 
-```bash
-# Install OpenClaw
-npm install -g openclaw
+The simplest way to use Landing Page Factory. No installation, no terminal.
 
-# Set up the agent
-cd landing-page-factory
-openclaw start
-```
+**Setup:**
+1. Open [Claude](https://claude.ai) and create a new project
+2. Upload the `skills/` folder and `references/` folder to your project
+3. Start chatting
 
-Then just message it naturally:
-
+**What you can say:**
 - "Build me a landing page for https://ridgewallet.com"
 - "Extract the brand from https://linear.app"
 - "Create a lead gen page for my consulting service"
 - "Build a page targeting enterprise buyers, time-saving angle"
 - "Run QA on the ridge-wallet page"
 
-The agent handles orchestration — extract, strategize, profile, write, build, QA — and produces the full package.
+Claude reads the skills, follows the pipeline, and produces all the artifacts — strategy docs, copy, visuals, HTML, and QA report.
+
+**Tips for Cowork:**
+- Upload your own product images for better visual fidelity
+- Ask Claude to build multiple variants: "Now build one for the time-saving angle" and "Now one for enterprise buyers"
+- Say "Run the sharpness audit" to get scored quality metrics on any copy
+
+### OpenClaw
+
+For developers who want persistent agents, cron automation, and multi-agent workflows:
+
+```bash
+npm install -g openclaw
+cd landing-page-factory
+openclaw start
+```
+
+Message it naturally — same commands as Cowork. Plus:
+- Schedule batch page generation
+- Chain with [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) or [SEO Kit](https://github.com/themattberman/seo-kit)
+- Run QA across variants with `bash scripts/eval-summary.sh`
+
+### Hermes / Other Frameworks
+
+The skills are portable markdown files. Drop them into any agent workspace:
+
+- **Hermes** — Copy `skills/` to your workspace. The agent picks them up automatically.
+- **Cursor / Windsurf / Cline** — Add skills as project rules or context files
+- **Custom agents** — Feed the SKILL.md contents as system context or tool definitions
+
+The pipeline logic lives in the skills, not in proprietary tooling. Any LLM that can follow structured instructions can run this.
 
 ### Automate It
 
@@ -288,7 +347,7 @@ Meta Ads Kit (find winning angles) → Landing Page Factory (build matched pages
 
 ### Firecrawl (optional, recommended)
 
-For deep site extraction:
+For deep site extraction (multiple pages, structured data, better proof coverage):
 
 ```bash
 export FIRECRAWL_API_KEY=your_key_here
@@ -296,26 +355,28 @@ export FIRECRAWL_API_KEY=your_key_here
 
 Get a key at [firecrawl.dev](https://firecrawl.dev). Free tier works fine for most sites.
 
-Without Firecrawl, the kit falls back to basic scraping (curl + readability extraction).
+Without Firecrawl, the kit falls back to basic scraping. Works fine for simple sites.
+
+> **Claude Cowork users:** You can skip Firecrawl entirely. Just paste the URL and Claude will extract what it can from the page directly.
 
 ### Image Generation
 
-Page Visuals uses whatever image generation model your OpenClaw instance is configured with. Works with:
-- OpenAI (DALL-E, GPT Image)
-- Google (Gemini image generation)
-- Fal.ai
-- Any provider configured in OpenClaw
+Page Visuals works with whatever image generation is available in your setup:
+- **Claude Cowork** — Uses Claude's built-in image generation
+- **OpenClaw** — Uses your configured provider (OpenAI, Google, Fal.ai, etc.)
+- **Manual** — Skip generation and provide your own product photos
 
 ---
 
 ## Cost
 
-| Tool | Monthly Cost |
-|------|-------------|
+| Setup | Monthly Cost |
+|-------|-------------|
+| Claude Cowork | Included with Claude Pro/Team subscription |
 | OpenClaw | Free (open source) |
 | Firecrawl | Free tier available |
 | Image gen | Depends on provider |
-| **Total** | **$0/mo** (with free tiers) |
+| **Skills themselves** | **Free forever** (MIT licensed) |
 
 ---
 
@@ -325,12 +386,9 @@ Page Visuals uses whatever image generation model your OpenClaw instance is conf
 landing-page-factory/
 ├── README.md              # You're here
 ├── SETUP.md               # Detailed setup guide
-├── SOUL.md                # Agent personality
-├── AGENTS.md              # Agent instructions
-├── install.sh             # Quick install
-├── doctor.sh              # Health check
-├── VERSION                # Current version
-├── skills/
+├── SOUL.md                # Agent personality (for OpenClaw/Hermes)
+├── AGENTS.md              # Agent instructions (for OpenClaw/Hermes)
+├── skills/                # ← THE CORE (works with any agent)
 │   ├── site-extract/         # URL → raw facts, proof, trust cues
 │   │   └── scripts/          # Firecrawl + fallback extraction
 │   ├── page-strategy/        # Facts → mechanism map, claims control
@@ -338,13 +396,23 @@ landing-page-factory/
 │   ├── page-copy/            # Strategy → conversion copy with QA
 │   ├── page-visuals/         # Strategy → preservation-classed images
 │   ├── page-build/           # Everything → deployable HTML page
-│   │   └── references/       # Anti-slop design reference
 │   └── page-qa/              # Final shippability gate
+├── references/
+│   ├── eval-rubric.md        # Quality scoring system
+│   └── anti-slop.md          # Banned AI design patterns
+├── examples/
+│   └── ridge-wallet-preview/ # Complete demo page package
+├── scripts/
+│   └── eval-summary.sh       # Quick variant comparison
 ├── workspace/
 │   ├── brand/                # Brand extract, profile, palette
 │   └── pages/                # Generated page packages
+├── install.sh             # Quick install (OpenClaw)
+├── doctor.sh              # Health check (OpenClaw)
 └── .env.example           # Environment template
 ```
+
+> **Claude Cowork users:** You only need the `skills/` and `references/` folders. Everything else is for agent framework setups.
 
 ---
 
