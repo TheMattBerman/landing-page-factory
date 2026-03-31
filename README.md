@@ -42,7 +42,7 @@ Products × Segments × Angles × Geos = Hundreds of pages nobody has time to bu
 
 This kit makes that possible. Not with generic AI slop — with a controlled pipeline that preserves your brand's actual mechanism, proof, and trust cues.
 
-If you're running my [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) or [Google Ads Kit](https://github.com/themattberman/google-ads-copilot), this is the missing piece. The experience from ad click to conversion, matched at every step.
+If you're running my [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) or [Google Ads Kit](https://github.com/themattberman/google-ads-copilot), this is the missing piece. Pair it with [StealAds](https://stealads.ai) for psychology-driven ad creative generation, and you have the full loop: winning ad angles, matched landing pages, and creative that converts.
 
 ---
 
@@ -279,7 +279,7 @@ This isn't about making one landing page faster. It's about making *message matc
 
 Different products. Different audience segments. Different psychological angles (time, money, control, status). Different geographies. Each one gets a page that matches.
 
-If you're running [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) or [Google Ads Kit](https://github.com/themattberman/google-ads-copilot), this closes the loop from ad to conversion.
+If you're running [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) or [Google Ads Kit](https://github.com/themattberman/google-ads-copilot), this closes the loop from ad to conversion. Add [StealAds](https://stealads.ai) for AI-generated ad creative that decodes the psychology behind winning ads, and every step from creative to click to conversion is matched.
 
 ---
 
@@ -320,7 +320,7 @@ openclaw start
 
 Message it naturally — same commands as Cowork. Plus:
 - Schedule batch page generation
-- Chain with [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit) or [SEO Kit](https://github.com/themattberman/seo-kit)
+- Chain with [Meta Ads Kit](https://github.com/themattberman/meta-ads-kit), [SEO Kit](https://github.com/themattberman/seo-kit), or [StealAds](https://stealads.ai)
 - Run QA across variants with `bash scripts/eval-summary.sh`
 
 ### Hermes / Other Frameworks
@@ -338,7 +338,7 @@ The pipeline logic lives in the skills, not in proprietary tooling. Any LLM that
 Combine with other kits for a full campaign pipeline:
 
 ```
-Meta Ads Kit (find winning angles) → Landing Page Factory (build matched pages) → Deploy → Monitor
+StealAds (decode ad psychology) → Meta Ads Kit (find winning angles) → Landing Page Factory (build matched pages) → Deploy → Monitor
 ```
 
 ---
