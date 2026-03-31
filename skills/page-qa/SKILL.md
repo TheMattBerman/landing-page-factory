@@ -98,7 +98,7 @@ Generated:
 
 ## Eval Reference
 
-For the full scoring criteria, pass thresholds, ranking weights, and verdict logic, see `references/eval-rubric.md` at the repo root.
+For the full scoring criteria, pass thresholds, ranking weights, and verdict logic, see `references/eval-rubric.md` (bundled with this skill).
 
 ## Verdict logic
 

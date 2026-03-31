@@ -396,14 +396,12 @@ landing-page-factory/
 │   ├── page-copy/            # Strategy → conversion copy with QA
 │   ├── page-visuals/         # Strategy → preservation-classed images
 │   ├── page-build/           # Everything → deployable HTML page
+│   │   └── references/       # Anti-slop design patterns
 │   └── page-qa/              # Final shippability gate
-├── references/
-│   ├── eval-rubric.md        # Quality scoring system
-│   └── anti-slop.md          # Banned AI design patterns
+│       ├── references/       # Eval rubric + scoring system
+│       └── scripts/          # eval-summary.sh (variant comparison)
 ├── examples/
 │   └── ridge-wallet-preview/ # Complete demo page package
-├── scripts/
-│   └── eval-summary.sh       # Quick variant comparison
 ├── workspace/
 │   ├── brand/                # Brand extract, profile, palette
 │   └── pages/                # Generated page packages

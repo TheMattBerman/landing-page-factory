@@ -196,7 +196,7 @@ Continue with downgrade if:
 
 ## Eval Reference
 
-For scoring criteria and pass thresholds, see `references/eval-rubric.md` at the repo root.
+For scoring criteria and pass thresholds, see `skills/page-qa/references/eval-rubric.md`.
 
 ## Hand-off
 
