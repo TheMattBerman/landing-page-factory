@@ -9,6 +9,7 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 URL=""
 OUTPUT_DIR="workspace/brand"
 
@@ -27,6 +28,30 @@ if [[ -z "$URL" ]]; then
 fi
 
 # Load API key from env or credentials file
+if [[ -z "${FIRECRAWL_API_KEY:-}" ]]; then
+  PROJECT_ROOT=""
+  if [[ -n "${LPF_ROOT:-}" && -f "${LPF_ROOT}/.env" ]]; then
+    PROJECT_ROOT="$LPF_ROOT"
+  else
+    CANDIDATE="$SCRIPT_DIR"
+    while [[ "$CANDIDATE" != "/" ]]; do
+      if [[ -f "$CANDIDATE/.env" && -f "$CANDIDATE/AGENTS.md" ]]; then
+        PROJECT_ROOT="$CANDIDATE"
+        break
+      fi
+      CANDIDATE="$(dirname "$CANDIDATE")"
+    done
+  fi
+
+  if [[ -n "$PROJECT_ROOT" && -f "$PROJECT_ROOT/.env" ]]; then
+    # Export local .env values so shell invocation works without requiring set -a.
+    set -a
+    # shellcheck disable=SC1090
+    source "$PROJECT_ROOT/.env"
+    set +a
+  fi
+fi
+
 if [[ -z "${FIRECRAWL_API_KEY:-}" ]]; then
   if [[ -f ~/.openclaw/credentials/firecrawl.env ]]; then
     source ~/.openclaw/credentials/firecrawl.env
@@ -165,7 +190,16 @@ else
   # Fallback: try to find logo in markdown content or metadata
   MARKDOWN_FILE="$OUTPUT_DIR/extract-markdown.md"
   if [[ -f "$MARKDOWN_FILE" ]]; then
-    LOGO_FALLBACK=$(grep -oP 'https?://[^\s\)\"]+logo[^\s\)\"]*\.(png|jpg|jpeg|svg|webp)' "$MARKDOWN_FILE" | head -1)
+    LOGO_FALLBACK=$(python3 - "$MARKDOWN_FILE" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text(encoding="utf-8")
+match = re.search(r'https?://[^\s\)"]+logo[^\s\)"]*\.(?:png|jpg|jpeg|svg|webp)', text, re.I)
+print(match.group(0) if match else "")
+PY
+)
     if [[ -n "$LOGO_FALLBACK" ]]; then
       echo "  → Logo not in branding data, found in page content: $LOGO_FALLBACK"
       LOGO="$LOGO_FALLBACK"

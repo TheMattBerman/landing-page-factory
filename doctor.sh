@@ -28,7 +28,7 @@ echo ""
 
 # Check skill files exist
 echo "Skills:"
-for skill in site-extract page-strategy brand-profile page-copy page-visuals page-build page-qa; do
+for skill in landing-page-factory-orchestrator site-extract page-strategy brand-profile page-copy page-visuals page-build page-qa; do
   if [[ -f "$SCRIPT_DIR/skills/$skill/SKILL.md" ]]; then
     check "$skill" "ok"
   else
@@ -46,11 +46,81 @@ else
   check "curl — not found" "fail"
 fi
 
+if [[ -x "$SCRIPT_DIR/scripts/image-provider.sh" ]]; then
+  check "scripts/image-provider.sh present" "ok"
+else
+  check "scripts/image-provider.sh missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/providers/bloom.sh" ]]; then
+  check "Bloom provider adapter present" "ok"
+else
+  check "Bloom provider adapter missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/providers/nano-banana.sh" ]]; then
+  check "Nano Banana fallback adapter present" "ok"
+else
+  check "Nano Banana fallback adapter missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/check-secrets.sh" ]]; then
+  if "$SCRIPT_DIR/scripts/check-secrets.sh" >/dev/null 2>&1; then
+    check "secret guard passed" "ok"
+  else
+    check "secret guard found tracked or staged secrets" "fail"
+  fi
+else
+  check "scripts/check-secrets.sh missing or not executable" "warn"
+fi
+
 # python3
 if command -v python3 &>/dev/null; then
   check "python3 $(python3 --version 2>&1 | awk '{print $2}')" "ok"
 else
   check "python3 — not found" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/resolve-visual-assets.py" ]]; then
+  check "scripts/resolve-visual-assets.py present" "ok"
+else
+  check "scripts/resolve-visual-assets.py missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/prepare-build-meta.py" ]]; then
+  check "scripts/prepare-build-meta.py present" "ok"
+else
+  check "scripts/prepare-build-meta.py missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/select-build-images.py" ]]; then
+  check "scripts/select-build-images.py present" "ok"
+else
+  check "scripts/select-build-images.py missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/html-image-context.py" ]]; then
+  check "scripts/html-image-context.py present" "ok"
+else
+  check "scripts/html-image-context.py missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/build-page.py" ]]; then
+  check "scripts/build-page.py present" "ok"
+else
+  check "scripts/build-page.py missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/page-admin.py" ]]; then
+  check "scripts/page-admin.py present" "ok"
+else
+  check "scripts/page-admin.py missing or not executable" "fail"
+fi
+
+if [[ -x "$SCRIPT_DIR/scripts/run-pipeline.py" ]]; then
+  check "scripts/run-pipeline.py present" "ok"
+else
+  check "scripts/run-pipeline.py missing or not executable" "fail"
 fi
 
 # jq (optional but helpful)
@@ -76,9 +146,34 @@ else
   check "workspace/brand/ — run install.sh first" "fail"
 fi
 
+if [[ -d "memory" ]]; then
+  check "memory/ exists" "ok"
+else
+  check "memory/ missing (will be created on first orchestrator log)" "warn"
+fi
+
+echo ""
+echo "Image providers:"
+
+if [[ -n "${BLOOM_API_KEY:-}" ]]; then
+  check "BLOOM_API_KEY configured" "ok"
+elif [[ -f "$SCRIPT_DIR/.env" ]] && rg -n '^[[:space:]]*BLOOM_API_KEY=' "$SCRIPT_DIR/.env" >/dev/null 2>&1; then
+  check "BLOOM_API_KEY configured in local .env" "ok"
+else
+  check "BLOOM_API_KEY not set (Bloom first-pass generation unavailable)" "warn"
+fi
+
+if [[ -n "${NANO_BANANA_COMMAND:-}" ]]; then
+  check "NANO_BANANA_COMMAND configured" "ok"
+elif [[ -f "$SCRIPT_DIR/.env" ]] && rg -n '^[[:space:]]*NANO_BANANA_COMMAND=' "$SCRIPT_DIR/.env" >/dev/null 2>&1; then
+  check "NANO_BANANA_COMMAND configured in local .env" "ok"
+else
+  check "NANO_BANANA_COMMAND not set (fallback adapter requires external command)" "warn"
+fi
+
 # Pages directory
 if [[ -d "workspace/pages" ]]; then
-  PAGE_COUNT=$(ls -d workspace/pages/*/ 2>/dev/null | wc -l)
+  PAGE_COUNT=$(find workspace/pages -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
   check "workspace/pages/ exists ($PAGE_COUNT pages)" "ok"
 else
   check "workspace/pages/ — run install.sh first" "fail"

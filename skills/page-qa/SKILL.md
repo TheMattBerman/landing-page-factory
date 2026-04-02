@@ -20,6 +20,7 @@ This is the final gate. It exists because good-looking pages can still be strate
 - `workspace/pages/[page-name]/index.html`
 - `workspace/pages/[page-name]/meta.json`
 - `workspace/pages/[page-name]/visuals/index.md`
+- `workspace/pages/[page-name]/visuals/manifest.json` when present
 - `references/anti-slop.md`
 
 ## QA dimensions
@@ -49,6 +50,7 @@ Score each 1-10 unless pass/fail is more appropriate.
 - correct preservation class use
 - no fake precision where exactness was required
 - no obvious artifacts
+- provider fallback history is reflected honestly in metadata when relevant
 
 ### 6. Build quality
 - responsive structure

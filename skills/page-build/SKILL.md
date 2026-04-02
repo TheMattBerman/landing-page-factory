@@ -26,6 +26,9 @@ This stage assembles the page while preserving what matters for trust and conver
 
 If strategy is missing, stop.
 
+If `workspace/pages/[page-name]/visuals/manifest.json` exists, use it as the canonical machine-readable visual source.
+Do not ignore provider metadata when it affects trust, fidelity, or fallback history.
+
 ## Preservation hierarchy
 
 Apply in this order:
@@ -44,6 +47,7 @@ Before generating HTML, confirm:
 - conversion mechanism confirmed
 - proof inventory loaded
 - trust cues selected
+- visual manifest resolved into build-ready image paths
 - required category conventions preserved
 - CTA destination known
 - layout choice justified in one line
@@ -134,6 +138,45 @@ Write this into `workspace/pages/[page-name]/qa.md` and summarize in `meta.json`
 - images_used
 - sections_present
 - build_confidence
+
+When a visual manifest exists, also include:
+- `hero_image`
+- `image_provider_policy`
+- `images_used` as structured objects, not only bare filenames
+- provider and fallback context when relevant to review or QA
+
+## Build helper
+
+Use `scripts/resolve-visual-assets.py --page-name [page-name]` to convert `visuals/manifest.json`
+into build-ready image metadata for HTML and `meta.json`.
+
+Then use `scripts/prepare-build-meta.py --page-name [page-name] --resolved-assets [file]`
+to merge those resolved assets into `meta.json` with deterministic selection fields:
+- `hero_image`
+- `mechanism_image`
+- `lifestyle_image`
+- `og_image`
+- `image_slots.hero`
+- `image_slots.mechanism`
+- `image_slots.lifestyle`
+- `image_slots.og`
+
+Then use `skills/page-build/scripts/html-image-context.py --meta workspace/pages/[page-name]/meta.json`
+to emit literal HTML-ready values such as:
+- `hero_img_src`
+- `hero_img_alt`
+- `mechanism_img_src`
+- `mechanism_img_alt`
+- `lifestyle_img_src`
+- `lifestyle_img_alt`
+- `og_image_path`
+
+Minimal executable builder:
+- `skills/page-build/scripts/build-page.py --page-name [page-name]`
+  This consumes `strategy.json`, `meta.json`, and `html-image-context.json` and writes a real `index.html` scaffold.
+
+Use the skill-local scripts as the primary interface for Cowork or any agent runtime that only uploads the skill folder.
+The repo-root `/scripts` copies are local development conveniences, not a packaging requirement.
 
 ## Eval Reference
 

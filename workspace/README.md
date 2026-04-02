@@ -24,6 +24,7 @@ pages/[page-name]/
 ├── copy.md            # Full conversion copy with sharpness audit
 ├── visuals/
 │   ├── index.md       # Shot plan with preservation classes
+│   ├── manifest.json  # Machine-readable provider runs, refs, remote IDs, fallback history
 │   └── *.jpg          # Generated images
 ├── index.html         # Deployable single-file HTML page
 ├── meta.json          # Build metadata, proof provenance, confidence
@@ -31,3 +32,15 @@ pages/[page-name]/
 ```
 
 Brand data is shared across pages. Strategy, copy, visuals, and build are per-page.
+
+Build helper:
+- `scripts/resolve-visual-assets.py --page-name [page-name]`
+  This resolves `visuals/manifest.json` into build-ready image metadata for HTML assembly and `meta.json`.
+- `scripts/prepare-build-meta.py --page-name [page-name] --resolved-assets [file]`
+  This merges resolved visual assets into `meta.json`, including deterministic hero/mechanism/lifestyle image picks.
+- `scripts/select-build-images.py --meta workspace/pages/[page-name]/meta.json`
+  This emits the final builder slot object for hero, mechanism, lifestyle, and OG image selection.
+- `scripts/html-image-context.py --meta workspace/pages/[page-name]/meta.json`
+  This emits literal HTML-ready image values and default alt text for the chosen slots.
+- `scripts/build-page.py --page-name [page-name]`
+  This writes a minimal real `index.html` scaffold using strategy, meta, and HTML-ready image values.

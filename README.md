@@ -22,6 +22,8 @@ This kit automates the entire landing page pipeline:
 
 The result: A complete landing page package from a URL — strategy doc, copy, visuals, HTML, metadata, and QA report.
 
+Image generation note: Bloom is the recommended first pass for `page-visuals`, and the referral link here gives the first 100 users 15 free credits: [try Bloom](https://go.trybloom.ai/matthew-berman). Thank you Bloom for hooking it up.
+
 ---
 
 ## Why This Exists
@@ -65,6 +67,10 @@ Claude reads the skills, runs the pipeline, and produces the full page package. 
 **That's it.** Claude handles extraction, strategy, copy, visuals, build, and QA — all guided by the skills in this repo.
 
 > **Tip:** For best results, also add `references/eval-rubric.md` and `references/anti-slop.md` to your project so Claude can score and QA the output.
+>
+> **Reality check:** the repo now includes a hybrid orchestrator runner for local use, but Cowork itself still depends on skill-authored judgment for strategy, brand profiling, copy, and most visual direction. That is deliberate. The orchestrator stops cleanly when those artifacts do not exist instead of pretending those stages are fully automated.
+>
+> **Cowork provider note:** tell Cowork to check Firecrawl first for extraction and Bloom first for images. If either provider is blocked or unavailable, it should pause and ask before downgrading. It should not silently substitute WebFetch or default built-in image generation.
 
 ### Option B: OpenClaw (Full agent framework)
 
@@ -101,6 +107,18 @@ Or run each stage individually:
 /page-build --page ridge-wallet-v1
 /page-qa --page ridge-wallet-v1
 ```
+
+Or use the local orchestrator runner to execute the scripted parts and pause at the next authored stage:
+
+```bash
+python3 scripts/run-pipeline.py --url https://ridgewallet.com --page-name ridge-wallet-proof --format markdown
+
+# Later, after strategy/profile/copy/visuals exist:
+python3 scripts/run-pipeline.py --page-name ridge-wallet-proof --format markdown
+```
+
+By default, the orchestrator now pauses if `FIRECRAWL_API_KEY` is missing so extraction does not silently degrade on serious runs.
+If you explicitly want the downgrade, add `--allow-basic-extract`.
 
 ### Option C: Any Agent Framework
 
@@ -150,6 +168,7 @@ This kit forces a **7-stage pipeline** where each stage produces an explicit art
 
 | Skill | What It Does |
 |-------|-------------|
+| `landing-page-factory-orchestrator` | Top-level control skill for full-pipeline runs, variants, reruns, page naming, prerequisite checks, and admin tasks |
 | `site-extract` | Scrape a URL for exact claims, proof, CTAs, mechanism language, trust cues, visual identity, and page patterns |
 | `page-strategy` | Map the mechanism, normalize the offer, control claims, route by page type, flag review items |
 | `brand-profile` | Build evidence-backed voice + visual system. Layer 1: observed facts. Layer 2: synthesis. |
@@ -165,6 +184,8 @@ Extract (facts) → Strategy (decisions) → Profile (brand) → Copy (words) �
 ```
 
 Every stage reads from the previous stage's artifacts. No stage hallucinates inputs.
+For Cowork-style usage, start with `landing-page-factory-orchestrator` when the request is about the whole run, variants, reruns, or figuring out order.
+For local repo use, `scripts/run-pipeline.py` is the corresponding hybrid runner around that orchestrator skill.
 
 ---
 
@@ -222,6 +243,16 @@ Assembles the HTML with a **preservation hierarchy**:
 
 Routes by page type: product-led, SaaS/app, lead capture, authority/service, regulated.
 
+When present, `visuals/manifest.json` is the canonical machine-readable record for which assets were generated,
+which provider produced them, and whether fallback occurred.
+
+Build helpers:
+- `scripts/resolve-visual-assets.py` resolves generated assets into build-ready image metadata
+- `scripts/prepare-build-meta.py` merges that data into `meta.json` with deterministic hero and section image picks
+- `scripts/select-build-images.py` emits the final builder slots for hero, mechanism, lifestyle, and OG image use
+- `scripts/html-image-context.py` emits HTML-ready image `src` and `alt` values from those selected slots
+- `scripts/build-page.py` writes a minimal real `index.html` scaffold from strategy, meta, and image context
+
 ### Stage 7: Page QA
 Final gate scores 7 dimensions:
 - Mechanism preservation
@@ -259,6 +290,7 @@ workspace/pages/[page-name]/
 ├── copy.md            # Full copy with sharpness audit
 ├── visuals/
 │   ├── index.md       # Shot plan with preservation classes
+│   ├── manifest.json  # Provider runs, refs, fallback history
 │   ├── hero-1.jpg     # Generated images
 │   ├── product-1.jpg
 │   └── lifestyle-1.jpg
@@ -345,7 +377,7 @@ StealAds (decode ad psychology) → Meta Ads Kit (find winning angles) → Landi
 
 ## Configuration
 
-### Firecrawl (optional, recommended)
+### Firecrawl (strongly recommended)
 
 For deep site extraction (multiple pages, structured data, better proof coverage):
 
@@ -355,15 +387,26 @@ export FIRECRAWL_API_KEY=your_key_here
 
 Get a key at [firecrawl.dev](https://firecrawl.dev). Free tier works fine for most sites.
 
-Without Firecrawl, the kit falls back to basic scraping. Works fine for simple sites.
+For serious runs, set Firecrawl up first.
 
-> **Claude Cowork users:** You can skip Firecrawl entirely. Just paste the URL and Claude will extract what it can from the page directly.
+Without Firecrawl, the kit falls back to basic scraping. That is a downgrade:
+- weaker proof coverage
+- weaker pricing and testimonial capture
+- weaker multi-page trust-cue extraction
+- higher chance that strategy and copy start from incomplete evidence
+
+The orchestrator auto-detects `FIRECRAWL_API_KEY`:
+- key present: use Firecrawl extraction
+- key missing: fall back to basic extraction and note the downgrade
+
+> **Claude Cowork users:** the system still works without Firecrawl, but if you want public-release-quality extraction, treat Firecrawl as the preferred path instead of the optional one.
 
 ### Image Generation
 
 Page Visuals works with whatever image generation is available in your setup:
+- **Bloom** — Preferred first pass for on-brand image generation. Keep Page Factory brand discovery as the source of truth, then use Bloom brand onboarding only to give the image model provider-side brand context. If a brand does not exist in Bloom yet, onboard it from the source URL or fill in Bloom context from your extracted brand data. Get started with Bloom here: [trybloom.ai via this referral link](https://go.trybloom.ai/matthew-berman) (first 100 users get 15 free credits).
 - **Claude Cowork** — Uses Claude's built-in image generation
-- **OpenClaw** — Uses your configured provider (OpenAI, Google, Fal.ai, etc.)
+- **OpenClaw** — Uses your configured provider. Recommended order: Bloom first, Nano Banana fallback, then any other provider you have configured.
 - **Manual** — Skip generation and provide your own product photos
 
 ---

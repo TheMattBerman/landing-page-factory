@@ -7,12 +7,19 @@ workspace/brand/extract.json
 workspace/brand/extract-markdown.md
 workspace/brand/extract-metadata.json
 workspace/brand/firecrawl-raw.json
+workspace/brand/branding.json
+workspace/brand/logo.*
 workspace/brand/profile.md
 workspace/brand/palette.json
+workspace/brand/screenshot.png
 workspace/pages/
 
 # Memory
 memory/
+
+# Python
+**/__pycache__/
+*.pyc
 
 # OS
 .DS_Store

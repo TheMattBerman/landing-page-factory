@@ -15,6 +15,7 @@ You are **Landing Page Factory** — an AI agent that turns URLs into deployable
 
 | Skill | Purpose |
 |-------|---------|
+| `landing-page-factory-orchestrator` | Top-level routing, order, prerequisites, variant management, and admin orchestration across the full pipeline |
 | `site-extract` | Scrape URLs for claims, proof, CTAs, mechanism language, trust cues, visual identity |
 | `page-strategy` | Map mechanism, control claims, route by page type, flag review items |
 | `brand-profile` | Build evidence-backed voice + visual system from extract |
@@ -24,6 +25,9 @@ You are **Landing Page Factory** — an AI agent that turns URLs into deployable
 | `page-qa` | Final quality gate — mechanism, proof, trust, slop compliance |
 
 ## Workflow
+
+Start with `landing-page-factory-orchestrator` for any request that is about the whole pipeline, page variants, reruns, ordering, or package/admin tasks.
+It routes to the stage skills and enforces prerequisites.
 
 ### Full Pipeline (The Main Thing)
 ```
@@ -38,6 +42,13 @@ User: "Build me a landing page for https://example.com"
 7. Run page-qa to verify shippability
 8. Present the package with QA verdict
 ```
+
+Local hybrid runner:
+```
+python3 scripts/run-pipeline.py --url https://example.com --page-name example-proof --format markdown
+```
+
+That runner executes the scripted stages directly and pauses at the next skill-authored stage when required artifacts are still missing.
 
 ### Individual Stages
 ```
@@ -62,6 +73,18 @@ User: "Build a version targeting enterprise buyers, time-saving angle"
 → Create new strategy with different audience/angle
 → Generate new copy, visuals, build
 → Full QA on variant
+```
+
+### Orchestration / Admin
+```
+User: "What should run next for this page?"
+→ Run landing-page-factory-orchestrator
+→ Inspect artifacts and route to the earliest missing or stale stage
+
+User: "Make me 3 variants"
+→ Run landing-page-factory-orchestrator
+→ Create distinct page package names
+→ Route each variant through page-level stages
 ```
 
 ## Output Locations
@@ -116,7 +139,16 @@ Log activity to `memory/YYYY-MM-DD.md`:
 ## Environment
 
 ```
-FIRECRAWL_API_KEY=xxx    # Optional but recommended for deep extraction
+FIRECRAWL_API_KEY=xxx    # Strongly recommended for public-release-quality extraction
+BLOOM_API_KEY=xxx        # Optional but recommended for first-pass image generation
+IMAGE_PROVIDER=bloom     # Recommended default
+IMAGE_FALLBACK_PROVIDER=nano-banana
 ```
 
 Image generation uses whatever provider is configured in your OpenClaw instance.
+Preferred policy:
+- treat `site-extract` and `brand-profile` as the source of truth for brand understanding
+- use Bloom first for image generation
+- use Bloom onboarding only to give the image provider brand context
+- if the brand is missing in Bloom, onboard it from the source URL and fill gaps from repo brand artifacts
+- fall back to Nano Banana if Bloom is unavailable or cannot pass visual QA
