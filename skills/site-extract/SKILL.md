@@ -154,6 +154,21 @@ Confidence: high | medium | low
 
 ## Firecrawl integration
 
+Provider selection is mandatory here.
+
+If `FIRECRAWL_API_KEY` is available, you must use Firecrawl for site extraction.
+Do not silently substitute generic browsing, WebFetch, or single-page scraping when Firecrawl is configured or expected.
+
+If Firecrawl is blocked by the runtime, unavailable, or the key is missing:
+1. say that explicitly
+2. ask the operator whether to:
+   - provide/configure Firecrawl
+   - run the local Firecrawl extraction command outside the sandbox
+   - accept downgraded manual/basic extraction
+3. do not silently proceed with downgraded extraction on a public-release-quality run
+
+Only use downgraded extraction without asking when the user has already explicitly approved that downgrade.
+
 When Firecrawl is available, use the v2 API with the `branding` format:
 
 ```bash
@@ -203,6 +218,10 @@ If Firecrawl or scraping fails:
 - mark blocked sections explicitly
 - request operator-provided screenshots or copy for missing trust/proof/mechanism data
 - do not fabricate extracted structure as if it were observed
+
+If Firecrawl is blocked by Cowork or another sandbox proxy:
+- state that `api.firecrawl.dev` must be allowed by the runtime
+- recommend the local preflight command path rather than pretending WebFetch is equivalent
 
 ## Stop / continue logic
 

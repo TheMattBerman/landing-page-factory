@@ -11,6 +11,9 @@ echo ""
 # Create workspace directories
 mkdir -p workspace/brand
 mkdir -p workspace/pages
+mkdir -p memory
+mkdir -p scripts/providers
+mkdir -p scripts/lib
 
 # Check dependencies
 MISSING=()
@@ -39,7 +42,10 @@ for skill in "$SCRIPT_DIR"/skills/*/; do
 done
 echo ""
 echo "🚀 Ready! Start with:"
-echo "   /site-extract https://yoursite.com"
-echo ""
-echo "Or run the full pipeline:"
 echo "   Build me a landing page for https://yoursite.com"
+echo ""
+echo "Or ask the orchestrator for order, variants, or reruns:"
+echo "   Use landing-page-factory-orchestrator to plan the next stages for ridge-wallet-proof"
+echo ""
+echo "Local hybrid runner:"
+echo "   python3 scripts/run-pipeline.py --url https://yoursite.com --format markdown"

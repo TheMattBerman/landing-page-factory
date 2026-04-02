@@ -102,8 +102,14 @@ bash doctor.sh
 ```bash
 cp .env.example .env
 # Add your Firecrawl API key for deep extraction
-# Without it, basic extraction still works
+# Add your Bloom API key if you want Bloom as first-pass image generation
+# Without Firecrawl, extraction still works but with reduced coverage
 ```
+
+Recommended image provider order for OpenClaw:
+- Bloom first pass for on-brand generation
+- Nano Banana fallback if Bloom is unavailable, credits are exhausted, or exact-product QA fails
+- Manual assets for trust-critical product photography when model fidelity is not good enough
 
 ### Step 3: Start the Agent
 
@@ -136,6 +142,7 @@ workspace/pages/ridge-wallet-v1/
 ├── strategy.md + strategy.json
 ├── copy.md
 ├── visuals/
+│   ├── manifest.json
 ├── index.html          ← open in browser
 ├── meta.json
 └── qa.md               ← check the verdict
@@ -185,16 +192,71 @@ Feed the SKILL.md contents as system context. The skills are self-contained — 
 
 ## Firecrawl Setup (All Paths)
 
-[Firecrawl](https://firecrawl.dev) provides deep site extraction — scrapes multiple pages for better proof and trust cue coverage.
+[Firecrawl](https://firecrawl.dev) provides deep site extraction and should be treated as the recommended default for public-release work.
+It scrapes multiple pages for better proof, pricing, objection, and trust cue coverage.
 
 1. Sign up at [firecrawl.dev](https://firecrawl.dev) (free tier available)
 2. Get your API key
 3. Set it however your platform expects:
    - **OpenClaw:** `export FIRECRAWL_API_KEY=your_key` or add to `.env`
-   - **Claude Cowork:** Tell Claude your Firecrawl key in the conversation, or skip it — Claude can extract directly from URLs
+   - **Claude Cowork:** provide the key in whatever project/runtime path your setup supports, or explicitly tell Claude to use Firecrawl when available
    - **Other:** Pass the key to the extraction scripts
 
-**Without Firecrawl:** Everything still works. Basic extraction covers single pages well. Deep extraction is better for proof-heavy sites with testimonials, case studies, or pricing spread across multiple pages.
+The orchestrator and extraction scripts auto-detect `FIRECRAWL_API_KEY`.
+
+**Without Firecrawl:** the system still works, but it is running in reduced mode. Basic extraction covers single pages reasonably well, but it is weaker for:
+- proof-heavy sites
+- testimonials spread across multiple pages
+- pricing pages
+- case studies
+- trust cues that live outside the homepage
+
+For public-release-quality runs, use Firecrawl.
+
+---
+
+## Bloom Setup (Recommended For Images)
+
+[Bloom](https://go.trybloom.ai/matthew-berman) is the recommended first-pass provider for `page-visuals`.
+
+Important boundary:
+- Page Factory brand discovery remains the source of truth.
+- Bloom brand onboarding exists to give the image provider usable brand context, not to replace `site-extract` or `brand-profile`.
+
+Recommended workflow:
+1. Run `site-extract` and `brand-profile` as usual.
+2. When generating visuals, check whether the brand already exists in Bloom.
+3. If not, onboard the brand in Bloom from the site URL.
+4. If Bloom needs more help, fill in its brand context from `workspace/brand/extract.md`, `workspace/brand/profile.md`, and `workspace/brand/palette.json`.
+5. Generate with Bloom first.
+6. Fall back to Nano Banana if Bloom is unavailable, out of credits, or cannot clear the visual QA bar.
+
+What Bloom supports from its current developer docs:
+- Brand onboarding from a website or Instagram URL
+- Async image generation with variants
+- Image editing and resizing
+- Reference-image uploads for exact-product or packaging preservation
+- Credit checks
+
+Get started:
+- Referral link: [go.trybloom.ai/matthew-berman](https://go.trybloom.ai/matthew-berman)
+- Developer docs: [trybloom.ai/developers](https://www.trybloom.ai/developers/)
+
+Suggested environment variables:
+
+```bash
+# Preferred image provider for first-pass generation
+IMAGE_PROVIDER=bloom
+
+# Bloom API key
+BLOOM_API_KEY=your_key_here
+
+# Optional documented fallback
+IMAGE_FALLBACK_PROVIDER=nano-banana
+
+# Optional external command hook for Nano Banana
+NANO_BANANA_COMMAND="/path/to/your/nano-banana-adapter"
+```
 
 ---
 
